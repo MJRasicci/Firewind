@@ -1,0 +1,21 @@
+﻿@namespace Firewind.Components
+@inherits FirewindComponentBase
+@using ColorCode
+
+<div @attributes="ComponentAttributes">
+    <div class="h-full pb-2 fw-scrollable">
+        @for (var lineNumber = 1; lineNumber <= SourceLines.Count(); lineNumber++)
+        {
+            <pre data-prefix="@lineNumber"><code>@SourceLines.ElementAt(lineNumber - 1)</code></pre>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string SourceCode { get; set; } = string.Empty;
+    [Parameter] public string Language { get; set; } = string.Empty;
+
+    private IEnumerable<string> SourceLines => SourceCode.Split("\r\n");
+
+    protected override string CssClass => "fw-mockup-code border border-base-300 pb-0 flex flex-col overflow-hidden";
+}

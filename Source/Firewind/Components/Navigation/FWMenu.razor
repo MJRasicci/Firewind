@@ -1,0 +1,26 @@
+@namespace Firewind.Components
+@typeparam TMenuItem
+@inherits FirewindDataComponentBase<TMenuItem>
+
+<ul @attributes="ComponentAttributes">
+    @foreach (var item in Items)
+    {
+        <li>@RenderItem(item)</li>
+    }
+</ul>
+
+@code
+{
+    protected override string CssClass => "fw-menu";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Items = await DataSource.FetchDataAsync(CancellationToken.None);
+        await base.OnParametersSetAsync();
+    }
+
+    protected override RenderFragment<TMenuItem> DefaultItemTemplate => (context) => (__builder) =>
+    {
+        <a>@context?.ToString()</a>
+    };
+}
