@@ -1,6 +1,45 @@
 @import "tailwindcss";
+
+@plugin "daisyui" {
+	themes: all, light --default, dark --prefersdark;
+	root: ":root";
+	prefix: "fw-";
+	logs: true;
+}
+
+/*
+@plugin "./daisyui-theme.mjs";
+*/
+
 @source "../Components/";
 @source "../../Firewind/Components";
+
+@layer base {
+	:root .prose {
+		--tw-prose-body: var(--fallback-bc,oklch(var(--bc)/.8));
+		--tw-prose-headings: var(--fallback-bc,oklch(var(--bc)/1));
+		--tw-prose-lead: var(--fallback-bc,oklch(var(--bc)/1));
+		--tw-prose-links: var(--fallback-bc,oklch(var(--bc)/1));
+		--tw-prose-bold: var(--fallback-bc,oklch(var(--bc)/1));
+		--tw-prose-counters: var(--fallback-bc,oklch(var(--bc)/1));
+		--tw-prose-bullets: var(--fallback-bc,oklch(var(--bc)/.5));
+		--tw-prose-hr: var(--fallback-bc,oklch(var(--bc)/.2));
+		--tw-prose-quotes: var(--fallback-bc,oklch(var(--bc)/1));
+		--tw-prose-quote-borders: var(--fallback-bc,oklch(var(--bc)/.2));
+		--tw-prose-captions: var(--fallback-bc,oklch(var(--bc)/.5));
+		--tw-prose-code: var(--fallback-bc,oklch(var(--bc)/1));
+		--tw-prose-pre-code: var(--fallback-nc,oklch(var(--nc)/1));
+		--tw-prose-pre-bg: var(--fallback-n,oklch(var(--n)/1));
+		--tw-prose-th-borders: var(--fallback-bc,oklch(var(--bc)/.5));
+		--tw-prose-td-borders: var(--fallback-bc,oklch(var(--bc)/.2));
+	}
+}
+
+@layer utilities {
+	.fw-scrollable {
+		@apply overflow-auto scrollbar scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary scrollbar-track-neutral;
+	}
+}
 
 #blazor-error-ui {
 	color-scheme: light only;
