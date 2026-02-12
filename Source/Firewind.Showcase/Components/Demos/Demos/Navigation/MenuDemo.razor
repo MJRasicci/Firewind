@@ -1,0 +1,37 @@
+<div class="my-2 w-52 h-full border fw-scrollable">
+    <FWMenu DataSource="menuData">
+        <ItemTemplate>
+            <a @onclick="() => MenuItemClicked(context)">@context?.ToString()</a>
+        </ItemTemplate>
+    </FWMenu>
+</div>
+
+<div class="mx-auto mt-auto pb-2">
+    <FWButton OnClick="TestButtonClicked">Add Menu Item</FWButton>
+</div>
+
+@code {
+    private int count = 3;
+    private IDataSource<string> menuData = null!;
+    protected override Task OnInitializedAsync()
+    {
+        menuData = new InMemoryDataSource<string>(new[]
+        {
+            "Item 1",
+            "Item 2",
+            "Item 3"
+        });
+
+        return base.OnInitializedAsync();
+    }
+
+    private async Task TestButtonClicked(MouseEventArgs args)
+    {
+        await menuData.AddItemAsync($"Item {++count}");
+    }
+
+    private async Task MenuItemClicked(string item)
+    {
+        await menuData.RemoveItemAsync(item);
+    }
+}

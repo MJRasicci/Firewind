@@ -1,0 +1,20 @@
+<FWModal @bind-Open="ModalShown">
+    <form method="dialog">
+        <FWButton Size="ComponentSize.Small" Style="ButtonStyle.Ghost" Shape="ButtonShape.Circle" type="submit" class="absolute right-2 top-2">✕</FWButton>
+    </form>
+    <h3 class="font-bold text-lg">Hello!</h3>
+    <p class="py-4">Press ESC key, click on ✕ button, or click outside to close.</p>
+</FWModal>
+
+<FWButton Size="ComponentSize.Responsive" Style="ButtonStyle.Info" OnClick="ShowModal">Modal</FWButton>
+
+Is Modal Shown? @ModalShown
+
+@code {
+    private bool ModalShown { get; set; }
+
+    private void ShowModal()
+    {
+        ModalShown = true;
+    }
+}

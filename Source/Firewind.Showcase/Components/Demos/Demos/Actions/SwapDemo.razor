@@ -1,0 +1,31 @@
+<div class="flex flex-row space-x-2">
+    <FWButton Size="ComponentSize.Large" OnClick="OnButtonClick">
+        <FWSwap State="SwapState">
+            <On>Fade 🐶</On>
+            <Off>Fade 🐱</Off>
+        </FWSwap>
+    </FWButton>
+
+    <FWButton Size="ComponentSize.Large" OnClick="OnButtonClick">
+        <FWSwap Style="SwapStyle.Rotate" State="SwapState">
+            <On>Rotate 🐶</On>
+            <Off>Rotate 🐱</Off>
+        </FWSwap>
+    </FWButton>
+
+    <FWButton Size="ComponentSize.Large" OnClick="OnButtonClick">
+        <FWSwap Style="SwapStyle.Flip" State="SwapState">
+            <On>Flip 🐶</On>
+            <Off>Flip 🐱</Off>
+        </FWSwap>
+    </FWButton>
+</div>
+
+@code {
+    private bool SwapState;
+
+    private void OnButtonClick()
+    {
+        this.SwapState = !this.SwapState;
+    }
+}
