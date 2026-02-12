@@ -1,0 +1,12 @@
+﻿<button @onclick="OnButtonClick">
+    Times Clicked: @Clicks
+</button>
+
+@code {
+    private int Clicks { get; set; }
+
+    private void OnButtonClick()
+    {
+        this.Clicks++;
+    }
+}

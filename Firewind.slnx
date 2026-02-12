@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/Source/">
+    <Project Path="Source/Firewind.Showcase/Firewind.Showcase.csproj" />
+    <Project Path="Source/Firewind/Firewind.csproj" />
+  </Folder>
+</Solution>

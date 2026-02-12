@@ -1,0 +1,21 @@
+﻿@page "/"
+@inject DemoProvider demoProvider
+
+<PageTitle>Home</PageTitle>
+
+<div class="pb-6 px-6 lg:px-8 w-full">
+    @foreach (var demo in demos)
+    {
+        <GalleryItem Demo="@demo.ComponentType" Title="@demo.Title" Article="@demo.Article" />
+    }
+</div>
+
+@code {
+    private IEnumerable<ComponentDemo> demos = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.demos = await demoProvider.FetchDataAsync(CancellationToken.None);
+        await base.OnInitializedAsync();
+    }
+}
