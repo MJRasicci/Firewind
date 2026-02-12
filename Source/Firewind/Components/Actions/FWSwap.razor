@@ -1,0 +1,29 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<label @attributes="ComponentAttributes">
+    <div class="fw-swap-on">
+        @On
+    </div>
+
+    <div class="fw-swap-off">
+        @Off
+    </div>
+</label>
+
+@code {
+    [Parameter] public RenderFragment? On { get; set; }
+    [Parameter] public RenderFragment? Off { get; set; }
+    [Parameter] public bool State { get; set; }
+    [Parameter] public SwapStyle Style { get; set; }
+
+    protected override string CssClass => string.Join(' ',
+        "fw-swap",
+        Style switch
+        {
+            SwapStyle.Rotate => "fw-swap-rotate",
+            SwapStyle.Flip => "fw-swap-flip",
+            _ => default
+        },
+        this.State ? "fw-swap-active" : default);
+}

@@ -1,0 +1,23 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<details @attributes="ComponentAttributes">
+    @ButtonTemplate(this.Label)
+    <div class="fw-dropdown-content z-[1] shadow bg-base-300 rounded-box">
+        @ChildContent
+    </div>
+</details>
+
+@code
+{
+    [Parameter] public string Label { get; set; } = string.Empty;
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public RenderFragment<string> ButtonTemplate { get; set; } = label => __builder =>
+    {
+        <FWButton As="summary" class="m-1">@label</FWButton>
+    };
+
+    protected override string CssClass => "fw-dropdown";
+}
