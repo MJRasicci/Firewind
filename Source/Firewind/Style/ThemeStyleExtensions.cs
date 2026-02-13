@@ -18,7 +18,7 @@ public static class ThemeStyleExtensions
         _ => string.Empty
     };
 
-    public static string GlowCss(this ThemeColor color) => color switch
+    public static string GlowClasses(this ThemeColor color) => color switch
     {
         ThemeColor.Base300 => "shadow shadow-base-300/40",
         ThemeColor.Base200 => "shadow shadow-base-200/40",
