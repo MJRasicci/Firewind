@@ -21,6 +21,6 @@
     /// </summary>
     protected override RenderFragment<TMenuItem> DefaultItemTemplate => (context) => (__builder) =>
     {
-        <a>@context?.ToString()</a>
+        <FWLink href="#">@context?.ToString()</FWLink>
     };
 }
