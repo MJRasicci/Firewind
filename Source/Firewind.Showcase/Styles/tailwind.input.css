@@ -9,7 +9,7 @@
 }
 
 @plugin "./daisyui.mjs" {
-	themes: all, light --default, dark --prefersdark;
+	themes: all;
 	root: ":root";
 	prefix: "fw-";
 	logs: true;

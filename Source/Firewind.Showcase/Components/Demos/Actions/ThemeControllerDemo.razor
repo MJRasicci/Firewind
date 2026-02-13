@@ -1,0 +1,60 @@
+<div class="flex w-full max-w-3xl flex-col items-center gap-4 px-2">
+    <FWThemeController DataSource="themeDataSource" Label="Showcase Themes" />
+
+    <p class="text-center text-sm text-base-content/70">
+        Add or remove theme names from the shared <code>IDataSource&lt;string&gt;</code> and the controller updates automatically.
+    </p>
+
+    <div class="fw-join w-full max-w-xl">
+        <input
+            class="fw-input fw-join-item flex-1"
+            placeholder="Theme name (example: dracula)"
+            @bind="newTheme"
+            @bind:event="oninput" />
+        <FWButton class="fw-join-item" Style="ButtonStyle.Primary" OnClick="AddThemeAsync">Add Theme</FWButton>
+    </div>
+
+    <FWMenu DataSource="themeDataSource" class="w-full max-w-xl rounded-box bg-base-200 p-2">
+        <ItemTemplate Context="theme">
+            <div class="flex items-center justify-between gap-2">
+                <span class="font-mono">@theme</span>
+                <FWButton Size="ComponentSize.Small" Style="ButtonStyle.Ghost" OnClick="@(_ => RemoveThemeAsync(theme))">Remove</FWButton>
+            </div>
+        </ItemTemplate>
+    </FWMenu>
+</div>
+
+@code {
+    private readonly IDataSource<string> themeDataSource = new InMemoryDataSource<string>([
+        "light",
+        "dark",
+        "cupcake",
+        "retro",
+        "cyberpunk"
+    ]);
+
+    private string newTheme = string.Empty;
+
+    private async Task AddThemeAsync(MouseEventArgs _)
+    {
+        var candidateTheme = this.newTheme.Trim().ToLowerInvariant();
+
+        if (string.IsNullOrWhiteSpace(candidateTheme))
+        {
+            return;
+        }
+
+        var existingThemes = await this.themeDataSource.FetchDataAsync(CancellationToken.None);
+
+        if (existingThemes.Any(theme => string.Equals(theme, candidateTheme, StringComparison.OrdinalIgnoreCase)))
+        {
+            this.newTheme = string.Empty;
+            return;
+        }
+
+        await this.themeDataSource.AddItemAsync(candidateTheme);
+        this.newTheme = string.Empty;
+    }
+
+    private Task RemoveThemeAsync(string theme) => this.themeDataSource.RemoveItemAsync(theme);
+}
