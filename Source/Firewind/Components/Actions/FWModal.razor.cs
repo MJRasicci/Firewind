@@ -1,30 +1,51 @@
 namespace Firewind.Components;
 
 using Firewind.Base;
-using System.Runtime.InteropServices.JavaScript;
-using System.Runtime.Versioning;
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
-[SupportedOSPlatform("browser")]
-public partial class FWModal : FirewindComponentBase
+public partial class FWModal : FirewindComponentBase, IAsyncDisposable
 {
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; } = null!;
+
+    private IJSObjectReference? module;
+    private bool? renderedOpenState;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await JSHost.ImportAsync(nameof(FWModal), "/_content/Firewind/Components/Actions/FWModal.razor.js");
+            this.module = await this.JSRuntime.InvokeAsync<IJSObjectReference>(
+                "import",
+                "./_content/Firewind/Components/Actions/FWModal.razor.js");
         }
-        else
+
+        if (this.module is null || this.renderedOpenState == this.Open)
         {
-            if (this.Open)
-                Show(this.Id);
-            else
-                Hide(this.Id);
+            return;
         }
+
+        this.renderedOpenState = this.Open;
+
+        var methodName = this.Open ? "showDialog" : "closeDialog";
+        await this.module.InvokeVoidAsync(methodName, this.Id);
     }
 
-    [JSImport("showDialog", nameof(FWModal))]
-    internal static partial void Show(string element);
+    public async ValueTask DisposeAsync()
+    {
+        if (this.module is null)
+        {
+            return;
+        }
 
-    [JSImport("closeDialog", nameof(FWModal))]
-    internal static partial void Hide(string element);
+        try
+        {
+            await this.module.DisposeAsync();
+        }
+        catch (JSDisconnectedException)
+        {
+            // Ignore disconnects during teardown.
+        }
+    }
 }

@@ -15,10 +15,10 @@ public sealed class DynamicElement : FirewindComponentBase
     /// Gets or sets the HTML tag name to be used for the component rendering.
     /// </summary>
     /// <value>
-    /// The tag name as a <see cref="string"/>. The default is an empty string.
+    /// The tag name as a <see cref="string"/>. The default is <c>div</c>.
     /// </value>
     [Parameter]
-    public string Tag { get; set; } = string.Empty;
+    public string Tag { get; set; } = "div";
 
     /// <summary>
     /// Gets or sets the content to be rendered inside the dynamic element.
@@ -44,8 +44,10 @@ public sealed class DynamicElement : FirewindComponentBase
         // Sequence identifier for the rendering operations, ensuring the diffing algorithm operates efficiently.
         var seq = 0;
 
+        var tag = string.IsNullOrWhiteSpace(this.Tag) ? "div" : this.Tag;
+
         // Open the element with the tag specified in the Tag property.
-        builder.OpenElement(seq++, this.Tag);
+        builder.OpenElement(seq++, tag);
 
         // Add any additional attributes that have been provided to the component.
         builder.AddMultipleAttributes(seq++, this.ComponentAttributes);

@@ -4,9 +4,13 @@
 
 <div @attributes="ComponentAttributes">
     <div class="h-full pb-2 fw-scrollable">
-        @for (var lineNumber = 1; lineNumber <= SourceLines.Count(); lineNumber++)
+        @{
+            var sourceLines = SourceLines;
+        }
+
+        @for (var lineNumber = 1; lineNumber <= sourceLines.Count; lineNumber++)
         {
-            <pre data-prefix="@lineNumber"><code>@SourceLines.ElementAt(lineNumber - 1)</code></pre>
+            <pre data-prefix="@lineNumber"><code>@sourceLines[lineNumber - 1]</code></pre>
         }
     </div>
 </div>
@@ -15,7 +19,9 @@
     [Parameter] public string SourceCode { get; set; } = string.Empty;
     [Parameter] public string Language { get; set; } = string.Empty;
 
-    private IEnumerable<string> SourceLines => SourceCode.Split("\r\n");
+    private static readonly string[] LineSeparators = ["\r\n", "\n", "\r"];
+
+    private IReadOnlyList<string> SourceLines => this.SourceCode.Split(LineSeparators, StringSplitOptions.None);
 
     protected override string CssClass => "fw-mockup-code border border-base-300 pb-0 flex flex-col overflow-hidden";
 }
