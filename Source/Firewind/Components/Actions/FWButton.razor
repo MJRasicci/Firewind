@@ -1,7 +1,7 @@
 @namespace Firewind.Components
 @inherits FirewindComponentBase
 
-<DynamicElement Tag="@As" @onclick="OnClick" @attributes="ComponentAttributes" disabled="@Disabled">
+<DynamicElement Tag="@As" OnClick="HandleClickAsync" PreventDefaultOnClick="@Disabled" @attributes="ComponentAttributes">
     @ChildContent
 </DynamicElement>
 
@@ -68,10 +68,57 @@
     {
         base.OnParametersSet();
 
-        if (this.As == "button" && !this.ComponentAttributes.ContainsKey("type"))
+        var isButtonElement = string.Equals(this.As, "button", StringComparison.OrdinalIgnoreCase);
+
+        if (isButtonElement)
         {
-            this.ComponentAttributes["type"] = "button";
+            if (!this.ComponentAttributes.ContainsKey("type"))
+            {
+                this.ComponentAttributes["type"] = "button";
+            }
+
+            if (this.Disabled)
+            {
+                this.ComponentAttributes["disabled"] = true;
+            }
+            else
+            {
+                this.ComponentAttributes.Remove("disabled");
+            }
+
+            this.ComponentAttributes.Remove("aria-disabled");
+            return;
         }
+
+        this.ComponentAttributes.Remove("disabled");
+
+        if (this.Disabled)
+        {
+            this.ComponentAttributes["aria-disabled"] = "true";
+            if (!this.ComponentAttributes.ContainsKey("tabindex"))
+            {
+                this.ComponentAttributes["tabindex"] = "-1";
+            }
+        }
+        else
+        {
+            this.ComponentAttributes.Remove("aria-disabled");
+        }
+    }
+
+    /// <summary>
+    /// Dispatches click events only when the component is enabled.
+    /// </summary>
+    /// <param name="args">The click event arguments.</param>
+    /// <returns>A task that represents the asynchronous callback invocation.</returns>
+    private async Task HandleClickAsync(MouseEventArgs args)
+    {
+        if (this.Disabled)
+        {
+            return;
+        }
+
+        await this.OnClick.InvokeAsync(args);
     }
     
     /// <summary>
