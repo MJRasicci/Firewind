@@ -6,7 +6,7 @@
 /// <typeparam name="TDataItem">The type of data items stored in the data source.</typeparam>
 /// <remarks>
 /// This class is particularly useful in scenarios where persistent storage is not necessary, or when you want to work with a volatile copy of the data.
-/// It is important to note that this data source is not thread-safe by default and should be used with care in a multi-threaded or concurrent context.
+/// Access to the backing collection is synchronized so reads and writes are thread-safe.
 /// </remarks>
 public class InMemoryDataSource<TDataItem> : IDataSource<TDataItem>
 {
@@ -59,6 +59,8 @@ public class InMemoryDataSource<TDataItem> : IDataSource<TDataItem>
     /// <inheritdoc />
     public Task<IEnumerable<TDataItem>> FetchDataAsync(CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         List<TDataItem> snapshot;
 
         // Locking ensures thread-safe read operation of the in-memory data collection.

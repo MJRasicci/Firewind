@@ -28,5 +28,5 @@ public interface IDataSource<TDataItem>
     /// <summary>
     /// Event triggered when data changes.
     /// </summary>
-    event EventHandler DataChanged;
+    event EventHandler? DataChanged;
 }
