@@ -14,7 +14,7 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
 {
     private IDataSource<TDataItem> dataSource = null!;
     private List<TDataItem> items = [];
-    private readonly object itemsLock = new();
+    private readonly Lock itemsLock = new();
     private readonly CancellationTokenSource disposeTokenSource = new();
     private bool isDataSourceDirty;
     private bool isDisposed;
