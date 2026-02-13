@@ -2,33 +2,6 @@ namespace Firewind.Style;
 
 using System.Collections;
 
-internal struct ClassBucket
-{
-    public int Hash { get; set; }
-
-    public object[] Objects { get; set; }
-}
-
-internal struct Node
-{
-    public override int GetHashCode()
-    {
-        if (this.Prefix is not null)
-            return Prefix.GetHashCode();
-        else
-            return Value.GetHashCode();
-    }
-
-    public string? Prefix { get; set; }
-
-    public string Value { get; set; }
-}
-
-internal sealed class Tree
-{
-    public List<Node> Nodes { get; } = [];
-}
-
 /// <summary>
 /// Represents a list of CSS classes.
 /// </summary>
@@ -87,7 +60,7 @@ internal sealed class CssClassList : ICollection<string>, IEnumerable<string>
     {
         foreach (var token in tokens)
         {
-            Add(token);
+            Remove(token);
         }
     }
 
