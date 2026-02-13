@@ -24,6 +24,28 @@
     public MenuSize Size { get; set; }
 
     /// <summary>
+    /// Ensures orientation classes are not counteracted by DaisyUI's default menu wrapping behavior.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (this.ComponentAttributes.TryGetValue("style", out var styleAttribute) && styleAttribute is string styleValue)
+        {
+            if (styleValue.Contains("flex-wrap", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            var normalizedStyle = styleValue.Trim().TrimEnd(';');
+            this.ComponentAttributes["style"] = $"{normalizedStyle}; flex-wrap: nowrap;";
+            return;
+        }
+
+        this.ComponentAttributes["style"] = "flex-wrap: nowrap;";
+    }
+
+    /// <summary>
     /// Gets the root CSS class for the menu component.
     /// </summary>
     protected override string CssClass => new VariantClassBuilder("fw-menu")
