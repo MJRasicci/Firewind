@@ -1,7 +1,7 @@
 @namespace Firewind.Components
 @inherits FirewindComponentBase
 
-<details @attributes="ComponentAttributes">
+<details @onmouseenter="OnMouseEnter" @onmouseleave="OnMouseLeave" @attributes="ComponentAttributes">
     @ButtonTemplate(this.Label)
     <div class="@DropdownContentCssClass">
         @ChildContent
@@ -10,6 +10,8 @@
 
 @code
 {
+    private bool isHoverOpen;
+
     /// <summary>
     /// Gets or sets the text label passed to <see cref="ButtonTemplate"/>.
     /// </summary>
@@ -60,6 +62,15 @@
     public bool OpenOnHover { get; set; }
 
     /// <summary>
+    /// Keeps the details element's open state in sync when hover-open mode is enabled.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        SyncHoverOpenAttribute();
+    }
+
+    /// <summary>
     /// Gets the composed CSS class string for the dropdown content container.
     /// </summary>
     private string DropdownContentCssClass => new VariantClassBuilder("fw-dropdown-content z-[1] rounded-box")
@@ -76,4 +87,55 @@
         .AddVariant(this.Direction, static direction => direction.ClassNames())
         .AddIf(this.OpenOnHover, "fw-dropdown-hover")
         .Build();
+
+    /// <summary>
+    /// Opens the dropdown while the pointer is over the host element when hover-open mode is active.
+    /// </summary>
+    private void OnMouseEnter()
+    {
+        if (!this.OpenOnHover || this.isHoverOpen)
+        {
+            return;
+        }
+
+        this.isHoverOpen = true;
+        SyncHoverOpenAttribute();
+    }
+
+    /// <summary>
+    /// Closes the dropdown when the pointer exits the host element in hover-open mode.
+    /// </summary>
+    private void OnMouseLeave()
+    {
+        if (!this.OpenOnHover || !this.isHoverOpen)
+        {
+            return;
+        }
+
+        this.isHoverOpen = false;
+        SyncHoverOpenAttribute();
+    }
+
+    /// <summary>
+    /// Synchronizes the <c>open</c> attribute with hover-open state.
+    /// </summary>
+    private void SyncHoverOpenAttribute()
+    {
+        if (!this.OpenOnHover)
+        {
+            this.isHoverOpen = false;
+            this.ComponentAttributes.Remove("open");
+
+            return;
+        }
+
+        if (this.isHoverOpen)
+        {
+            this.ComponentAttributes["open"] = "open";
+        }
+        else
+        {
+            this.ComponentAttributes.Remove("open");
+        }
+    }
 }
