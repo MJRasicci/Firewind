@@ -4,7 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
     <TailwindConfigDir>$(MSBuildProjectDirectory)\Styles\</TailwindConfigDir>
-    <TailwindOutputFile>$(MSBuildProjectDirectory)/wwwroot/css/showcase.css</TailwindOutputFile>
+    <TailwindOutputFile>$(MSBuildProjectDirectory)\wwwroot\css\showcase.css</TailwindOutputFile>
   </PropertyGroup>
 
   <ItemGroup>
