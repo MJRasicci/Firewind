@@ -347,3 +347,7 @@ healthchecksdb
 
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
+
+# Firewind.Showcase generated assets
+Source/Firewind.Showcase/wwwroot/demos/
+Source/Firewind.Showcase/wwwroot/css/showcase.css

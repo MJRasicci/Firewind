@@ -22,4 +22,13 @@
     <ProjectReference Include="..\Firewind\Firewind.csproj" />
   </ItemGroup>
 
+  <Target Name="CopyDemoRazorFiles" BeforeTargets="BeforeBuild">
+    <ItemGroup>
+      <DemoRazorFiles Include="$(MSBuildProjectDirectory)\Components\Demos\**\*.razor" />
+    </ItemGroup>
+
+    <MakeDir Directories="$(MSBuildProjectDirectory)\wwwroot\demos\sources" />
+    <Copy SourceFiles="@(DemoRazorFiles)" DestinationFiles="@(DemoRazorFiles->'$(MSBuildProjectDirectory)\wwwroot\demos\sources\%(Filename).razor.txt')" SkipUnchangedFiles="true" />
+  </Target>
+
 </Project>
