@@ -47,7 +47,7 @@ internal class SourceCodeFormatter : CodeColorizerBase
 
         foreach (var styleInsertion in styleInsertions)
         {
-            WriteHtmlEncodedText(parsedSourceCode.Substring(offset, styleInsertion.Index - offset));
+            WriteHtmlEncodedText(parsedSourceCode[offset..styleInsertion.Index]);
 
             if (string.IsNullOrEmpty(styleInsertion.Text))
                 BuildSpanForCapturedStyle(styleInsertion.Scope);
@@ -57,7 +57,7 @@ internal class SourceCodeFormatter : CodeColorizerBase
             offset = styleInsertion.Index;
         }
 
-        WriteHtmlEncodedText(parsedSourceCode.Substring(offset));
+        WriteHtmlEncodedText(parsedSourceCode[offset..]);
     }
 
     private void WriteHtmlEncodedText(string text)

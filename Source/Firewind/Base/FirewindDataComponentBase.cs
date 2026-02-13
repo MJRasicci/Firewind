@@ -62,14 +62,14 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
         {
             lock (this.itemsLock)
             {
-                return this.items.ToList();
+                return [.. this.items];
             }
         }
         set
         {
             lock (this.itemsLock)
             {
-                this.items = new List<TDataItem>(value);
+                this.items = [.. value];
             }
         }
     }
@@ -119,10 +119,7 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
                 return;
             }
 
-            if (this.dataSource is not null)
-            {
-                this.dataSource.DataChanged -= OnDataChanged;
-            }
+            this.dataSource?.DataChanged -= OnDataChanged;
 
             this.dataSource = value ?? throw new ArgumentNullException(nameof(value), "DataSource cannot be null.");
             this.dataSource.DataChanged += OnDataChanged;
@@ -164,10 +161,7 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
 
         this.disposeTokenSource.Cancel();
 
-        if (this.dataSource is not null)
-        {
-            this.dataSource.DataChanged -= OnDataChanged;
-        }
+        this.dataSource?.DataChanged -= OnDataChanged;
 
         this.disposeTokenSource.Dispose();
     }
