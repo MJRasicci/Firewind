@@ -42,6 +42,24 @@
     public bool ContentGlow { get; set; }
 
     /// <summary>
+    /// Gets or sets the alignment variant for dropdown content.
+    /// </summary>
+    [Parameter]
+    public DropdownAlignment Alignment { get; set; }
+
+    /// <summary>
+    /// Gets or sets the direction variant for dropdown content.
+    /// </summary>
+    [Parameter]
+    public DropdownDirection Direction { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the dropdown opens on hover.
+    /// </summary>
+    [Parameter]
+    public bool OpenOnHover { get; set; }
+
+    /// <summary>
     /// Gets the composed CSS class string for the dropdown content container.
     /// </summary>
     private string DropdownContentCssClass => new VariantClassBuilder("fw-dropdown-content z-[1] rounded-box")
@@ -53,5 +71,9 @@
     /// <summary>
     /// Gets the root CSS class for the dropdown component.
     /// </summary>
-    protected override string CssClass => "fw-dropdown";
+    protected override string CssClass => new VariantClassBuilder("fw-dropdown")
+        .AddVariant(this.Alignment, static alignment => alignment.ClassNames())
+        .AddVariant(this.Direction, static direction => direction.ClassNames())
+        .AddIf(this.OpenOnHover, "fw-dropdown-hover")
+        .Build();
 }

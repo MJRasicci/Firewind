@@ -31,9 +31,18 @@
     public RenderFragment? ChildContent { get; set; }
 
     /// <summary>
+    /// Gets or sets the placement variant for the modal surface.
+    /// </summary>
+    [Parameter]
+    public ModalPlacement Placement { get; set; }
+
+    /// <summary>
     /// Gets the root CSS class for the modal component.
     /// </summary>
-    protected override string CssClass => "fw-modal";
+    protected override string CssClass => new VariantClassBuilder("fw-modal")
+        .AddVariant(this.Placement, static placement => placement.ClassNames())
+        .AddIf(this.Open, "fw-modal-open")
+        .Build();
 
     /// <summary>
     /// Handles the dialog close event and notifies binders that the modal closed.

@@ -22,7 +22,11 @@ public enum ComponentSize
     /// </summary>
     Large = 1,
     /// <summary>
+    /// Extra large size.
+    /// </summary>
+    ExtraLarge = 2,
+    /// <summary>
     /// Responsive size that adapts across breakpoints.
     /// </summary>
-    Responsive = 2
+    Responsive = 3
 }

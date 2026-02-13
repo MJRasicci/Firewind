@@ -12,9 +12,24 @@
 @code
 {
     /// <summary>
+    /// Gets or sets the menu orientation variant.
+    /// </summary>
+    [Parameter]
+    public MenuOrientation Orientation { get; set; }
+
+    /// <summary>
+    /// Gets or sets the menu size variant.
+    /// </summary>
+    [Parameter]
+    public MenuSize Size { get; set; }
+
+    /// <summary>
     /// Gets the root CSS class for the menu component.
     /// </summary>
-    protected override string CssClass => "fw-menu";
+    protected override string CssClass => new VariantClassBuilder("fw-menu")
+        .AddVariant(this.Orientation, static orientation => orientation.ClassNames())
+        .AddVariant(this.Size, static size => size.ClassNames())
+        .Build();
 
     /// <summary>
     /// Gets the fallback template used when <see cref="FirewindDataComponentBase{TDataItem}.ItemTemplate"/> is not provided.

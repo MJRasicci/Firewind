@@ -1,12 +1,40 @@
 @namespace Firewind.Components
 @inherits FirewindComponentBase
 
-<div @attributes="ComponentAttributes"></div>
+<div @attributes="ComponentAttributes">@ChildContent</div>
 
 @code
 {
     /// <summary>
+    /// Gets or sets optional divider content rendered between the divider lines.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the divider orientation variant.
+    /// </summary>
+    [Parameter]
+    public DividerOrientation Orientation { get; set; }
+
+    /// <summary>
+    /// Gets or sets the divider alignment position for the text/content area.
+    /// </summary>
+    [Parameter]
+    public ElementPosition Position { get; set; }
+
+    /// <summary>
+    /// Gets or sets the divider color variant.
+    /// </summary>
+    [Parameter]
+    public ThemeColor Color { get; set; }
+
+    /// <summary>
     /// Gets the root CSS class for the divider component.
     /// </summary>
-    protected override string CssClass => "fw-divider";
+    protected override string CssClass => new VariantClassBuilder("fw-divider")
+        .AddVariant(this.Orientation, static orientation => orientation.ClassNames())
+        .AddVariant(this.Position, static position => position.DividerClassNames())
+        .AddVariant(this.Color, static color => color.DividerClassNames())
+        .Build();
 }

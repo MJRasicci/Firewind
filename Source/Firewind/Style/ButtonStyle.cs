@@ -145,7 +145,8 @@ public static class ButtonSizeExtensions
         ComponentSize.Tiny => "fw-btn-xs",
         ComponentSize.Small => "fw-btn-sm",
         ComponentSize.Large => "fw-btn-lg",
-        ComponentSize.Responsive => "fw-btn-xs sm:fw-btn-sm md:fw-btn-md lg:fw-btn-lg",
+        ComponentSize.ExtraLarge => "fw-btn-xl",
+        ComponentSize.Responsive => "fw-btn-xs sm:fw-btn-sm md:fw-btn-md lg:fw-btn-lg xl:fw-btn-xl",
         _ => string.Empty
     };
 }

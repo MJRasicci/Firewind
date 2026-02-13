@@ -12,7 +12,22 @@
     public RenderFragment? ChildContent { get; set; }
 
     /// <summary>
+    /// Gets or sets the themed color variant for the link.
+    /// </summary>
+    [Parameter]
+    public ThemeColor Color { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether underline appears only on hover.
+    /// </summary>
+    [Parameter]
+    public bool HoverOnly { get; set; }
+
+    /// <summary>
     /// Gets the root CSS class for the link component.
     /// </summary>
-    protected override string CssClass => "fw-link";
+    protected override string CssClass => new VariantClassBuilder("fw-link")
+        .AddVariant(this.Color, static color => color.LinkClassNames())
+        .AddIf(this.HoverOnly, "fw-link-hover")
+        .Build();
 }

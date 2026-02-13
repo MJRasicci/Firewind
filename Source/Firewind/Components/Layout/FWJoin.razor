@@ -14,7 +14,15 @@
     public RenderFragment? ChildContent { get; set; }
 
     /// <summary>
+    /// Gets or sets the join orientation variant.
+    /// </summary>
+    [Parameter]
+    public JoinOrientation Orientation { get; set; }
+
+    /// <summary>
     /// Gets the root CSS class for the join component.
     /// </summary>
-    protected override string CssClass => "fw-join";
+    protected override string CssClass => new VariantClassBuilder("fw-join")
+        .AddVariant(this.Orientation, static orientation => orientation.ClassNames())
+        .Build();
 }

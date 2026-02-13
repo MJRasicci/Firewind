@@ -44,6 +44,18 @@
     public bool Outline { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the dashed variant should be applied.
+    /// </summary>
+    [Parameter]
+    public bool Dash { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the soft variant should be applied.
+    /// </summary>
+    [Parameter]
+    public bool Soft { get; set; }
+
+    /// <summary>
     /// The element to be used for rendering the button. Defaults to 'button'.
     /// </summary>
     [Parameter]
@@ -127,6 +139,8 @@
     protected override string CssClass => new VariantClassBuilder("fw-btn")
         .AddVariant(this.Shape, static shape => shape.ClassNames())
         .AddIf(this.Outline, "fw-btn-outline")
+        .AddIf(this.Dash, "fw-btn-dash")
+        .AddIf(this.Soft, "fw-btn-soft")
         .AddVariant(this.Style, static style => style.ClassNames())
         .AddVariant(this.Size, static size => size.ButtonClassNames())
         .AddIf(this.Active, "fw-btn-active")
