@@ -1,17 +1,12 @@
-﻿@namespace Firewind.Components
+@namespace Firewind.Components
 @inherits FirewindComponentBase
 @using ColorCode
+@using System.Net
+@using System.Text
 
 <div @attributes="ComponentAttributes">
     <div class="h-full pb-2 fw-scrollable">
-        @{
-            var sourceLines = SourceLines;
-        }
-
-        @for (var lineNumber = 1; lineNumber <= sourceLines.Count; lineNumber++)
-        {
-            <pre data-prefix="@lineNumber"><code>@sourceLines[lineNumber - 1]</code></pre>
-        }
+        @FormattedSource
     </div>
 </div>
 
@@ -20,8 +15,38 @@
     [Parameter] public string Language { get; set; } = string.Empty;
 
     private static readonly string[] LineSeparators = ["\r\n", "\n", "\r"];
+    private readonly SourceCodeFormatter formatter = new();
 
-    private IReadOnlyList<string> SourceLines => this.SourceCode.Split(LineSeparators, StringSplitOptions.None);
+    private MarkupString FormattedSource => this.ResolveLanguage() is ILanguage language
+        ? this.formatter.GetMarkupString(this.SourceCode, language)
+        : this.BuildPlainTextMarkup();
+
+    private ILanguage? ResolveLanguage()
+    {
+        if (string.IsNullOrWhiteSpace(this.Language))
+        {
+            return Languages.CSharp;
+        }
+
+        return Languages.FindById(this.Language);
+    }
+
+    private MarkupString BuildPlainTextMarkup()
+    {
+        var lines = this.SourceCode.Split(LineSeparators, StringSplitOptions.None);
+        var buffer = new StringBuilder();
+
+        for (var i = 0; i < lines.Length; i++)
+        {
+            buffer.Append("<pre data-prefix=\"")
+                  .Append(i + 1)
+                  .Append("\"><code>")
+                  .Append(WebUtility.HtmlEncode(lines[i]))
+                  .Append("</code></pre>");
+        }
+
+        return new MarkupString(buffer.ToString());
+    }
 
     protected override string CssClass => "fw-mockup-code border border-base-300 pb-0 flex flex-col overflow-hidden";
 }
