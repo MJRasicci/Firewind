@@ -11,7 +11,7 @@ public interface IFirewindComponent
     /// <value>
     /// A <see cref="string"/> representing the unique identifier of the component.
     /// </value>
-    string Id { get; }
+    public string Id { get; }
 
     /// <summary>
     /// Gets additional attributes that will be rendered with the component's root HTML element.
@@ -21,5 +21,5 @@ public interface IFirewindComponent
     /// A <see cref="Dictionary{TKey, TValue}"/> containing the attributes as key-value pairs,
     /// with the key being the attribute name and the value being the attribute value.
     /// </value>
-    Dictionary<string, object> ComponentAttributes { get; }
+    public Dictionary<string, object> ComponentAttributes { get; }
 }

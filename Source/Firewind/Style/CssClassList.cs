@@ -19,13 +19,19 @@ internal sealed class CssClassList : ICollection<string>, IEnumerable<string>
     /// Initializes a new instance and adds CSS classes from a space-delimited string.
     /// </summary>
     /// <param name="classNames">Space-delimited CSS class names.</param>
-    public CssClassList(string classNames) => Add(classNames);
+    public CssClassList(string classNames)
+    {
+        Add(classNames);
+    }
 
     /// <summary>
     /// Initializes a new instance and adds all provided class tokens.
     /// </summary>
     /// <param name="classNames">CSS class names to add.</param>
-    public CssClassList(params string[] classNames) => Add(classNames);
+    public CssClassList(params string[] classNames)
+    {
+        Add(classNames);
+    }
 
     /// <summary>
     /// Adds one or more class tokens from a space-delimited string.

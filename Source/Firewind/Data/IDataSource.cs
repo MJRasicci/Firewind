@@ -1,4 +1,4 @@
-﻿namespace Firewind.Data;
+namespace Firewind.Data;
 
 /// <summary>
 /// Interface for services which acquire data.
@@ -11,7 +11,7 @@ public interface IDataSource<TDataItem>
     /// </summary>
     /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
     /// <returns>A collection of <typeparamref name="TDataItem" />.</returns>
-    Task<IEnumerable<TDataItem>> FetchDataAsync(CancellationToken cancellationToken);
+    public Task<IEnumerable<TDataItem>> FetchDataAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Adds an item to the data source.
@@ -28,5 +28,5 @@ public interface IDataSource<TDataItem>
     /// <summary>
     /// Event triggered when data changes.
     /// </summary>
-    event EventHandler? DataChanged;
+    public event EventHandler? DataChanged;
 }

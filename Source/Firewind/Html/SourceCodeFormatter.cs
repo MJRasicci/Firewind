@@ -20,7 +20,9 @@ internal sealed class SourceCodeFormatter
     /// Optional ColorCode style dictionary. When not provided, <see cref="StyleDictionary.DefaultDark"/> is used.
     /// </param>
     public SourceCodeFormatter(StyleDictionary? style = null)
-        => this.formatter = new HtmlFormatter(style ?? StyleDictionary.DefaultDark, languageParser: null);
+    {
+        this.formatter = new HtmlFormatter(style ?? StyleDictionary.DefaultDark, languageParser: null);
+    }
 
     /// <summary>
     /// Converts source code into line-numbered syntax-highlighted markup.
@@ -33,7 +35,7 @@ internal sealed class SourceCodeFormatter
         ArgumentNullException.ThrowIfNull(sourceCode);
         ArgumentNullException.ThrowIfNull(language);
 
-        var highlightedContent = this.GetHighlightedContent(sourceCode, language);
+        var highlightedContent = GetHighlightedContent(sourceCode, language);
         var lineMarkup = SplitHighlightedLines(highlightedContent);
         var buffer = new StringBuilder();
 
@@ -251,7 +253,7 @@ internal sealed class SourceCodeFormatter
         }
 
         return i > nameStart
-            ? tag.Substring(nameStart, i - nameStart)
+            ? tag[nameStart..i]
             : string.Empty;
     }
 

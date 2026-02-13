@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Components;
 /// <typeparam name="TDataItem">The type of data that the component is responsible for displaying.</typeparam>
 public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBase, IDataComponent<TDataItem>, IDisposable
 {
-    private IDataSource<TDataItem> dataSource = null!;
     private List<TDataItem> items = [];
     private readonly Lock itemsLock = new();
     private readonly CancellationTokenSource disposeTokenSource = new();
@@ -24,20 +23,17 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">Arguments of the event.</param>
-    private void OnDataChanged(object? sender, EventArgs e)
+    private void OnDataChanged(object? sender, EventArgs e) => _ = InvokeAsync(async () =>
     {
-        _ = this.InvokeAsync(async () =>
+        try
         {
-            try
-            {
-                await this.BindDataAsync(this.disposeTokenSource.Token);
-            }
-            catch (OperationCanceledException) when (this.disposeTokenSource.IsCancellationRequested)
-            {
-                // The component is disposing. Ignore cancellation from teardown.
-            }
-        });
-    }
+            await BindDataAsync(this.disposeTokenSource.Token);
+        }
+        catch (OperationCanceledException) when (this.disposeTokenSource.IsCancellationRequested)
+        {
+            // The component is disposing. Ignore cancellation from teardown.
+        }
+    });
 
     /// <summary>
     /// Renders an individual data item using the defined item template.
@@ -85,20 +81,17 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
     {
         ObjectDisposedException.ThrowIf(this.isDisposed, this);
 
-        if (this.dataSource == null)
+        if (this.DataSource == null)
         {
             throw new InvalidOperationException("DataSource must not be null.");
         }
 
         using var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, this.disposeTokenSource.Token);
-        var data = await this.dataSource.FetchDataAsync(linkedTokenSource.Token);
+        var data = await this.DataSource.FetchDataAsync(linkedTokenSource.Token);
         this.Items = data; // Thread-safe assignment
-        await this.InvokeAsync(this.StateHasChanged);
+        await InvokeAsync(StateHasChanged);
     }
 
-    // BL0007: Component parameters should be auto properties
-    // Justification: Custom setter required so that when the data source changes we unsubscribe to events from the old data source (in case it hasn't been disposed)
-#pragma warning disable BL0007
     /// <summary>
     /// Gets or sets the data source object responsible for providing data to the component.
     /// This object must implement the <see cref="IDataSource{TDataItem}"/> interface.
@@ -111,22 +104,21 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
     [EditorRequired]
     public IDataSource<TDataItem> DataSource
     {
-        get => this.dataSource;
+        get;
         set
         {
-            if (this.dataSource == value)
+            if (field == value)
             {
                 return;
             }
 
-            this.dataSource?.DataChanged -= OnDataChanged;
+            field?.DataChanged -= OnDataChanged;
 
-            this.dataSource = value ?? throw new ArgumentNullException(nameof(value), "DataSource cannot be null.");
-            this.dataSource.DataChanged += OnDataChanged;
+            field = value ?? throw new ArgumentNullException(nameof(value), "DataSource cannot be null.");
+            field.DataChanged += OnDataChanged;
             this.isDataSourceDirty = true;
         }
-    }
-#pragma warning restore BL0007
+    } = null!;
 
     /// <summary>
     /// Gets or sets the template used for rendering each data item within the component.
@@ -145,10 +137,10 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
     /// <returns>A task that represents the asynchronous operation.</returns>
     protected override async Task OnParametersSetAsync()
     {
-        if (this.dataSource is not null && this.isDataSourceDirty)
+        if (this.DataSource is not null && this.isDataSourceDirty)
         {
             this.isDataSourceDirty = false;
-            await this.BindDataAsync(this.disposeTokenSource.Token);
+            await BindDataAsync(this.disposeTokenSource.Token);
         }
 
         await base.OnParametersSetAsync();
@@ -159,7 +151,7 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
     /// </summary>
     public void Dispose()
     {
-        this.Dispose(disposing: true);
+        Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
 
@@ -184,7 +176,7 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
         }
 
         this.disposeTokenSource.Cancel();
-        this.dataSource?.DataChanged -= OnDataChanged;
+        this.DataSource?.DataChanged -= OnDataChanged;
         this.disposeTokenSource.Dispose();
     }
 }

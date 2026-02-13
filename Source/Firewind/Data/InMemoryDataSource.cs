@@ -1,4 +1,4 @@
-﻿namespace Firewind.Data;
+namespace Firewind.Data;
 
 /// <summary>
 /// Provides an in-memory implementation of <see cref="IDataSource{TDataItem}"/> that can be used for temporary storage and manipulation of a collection of data items.

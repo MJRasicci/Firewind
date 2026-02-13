@@ -1,4 +1,4 @@
-﻿@inject HttpClient Http
+@inject HttpClient Http
 
 <article class="prose prose-sm md:prose-base py-4 max-w-full w-full xl:w-5/6 mx-auto">
     <h2>@Title</h2>
@@ -23,9 +23,9 @@
 </div>
 
 @code {
-    [Parameter] public string Title { get; set; }
-    [Parameter] public string Article { get; set; }
-    [Parameter] public Type Demo { get; set; }
+    [Parameter] public required string Title { get; set; }
+    [Parameter] public required string Article { get; set; }
+    [Parameter] public required Type Demo { get; set; }
 
     private string DemoSource { get; set; } = string.Empty;
 

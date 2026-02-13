@@ -1,4 +1,4 @@
-﻿namespace Firewind.Base;
+namespace Firewind.Base;
 
 using Firewind.Style;
 using Microsoft.AspNetCore.Components;
@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Components;
 /// </summary>
 public abstract class FirewindComponentBase : ComponentBase, IFirewindComponent
 {
+    private static readonly IReadOnlyDictionary<string, object> EmptyAttributes = new Dictionary<string, object>();
 
     /// <summary>
     /// Gets or sets additional attributes captured from the component invocation.
@@ -19,7 +20,7 @@ public abstract class FirewindComponentBase : ComponentBase, IFirewindComponent
     /// as the component's HTML 'id' attribute; otherwise, a unique identifier will be generated.
     /// </remarks>
     [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object> AdditionalAttributes { get; set; } = [];
+    public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 
     /// <summary>
     /// Gets or sets additional attributes that will be rendered with the component's HTML element
@@ -38,19 +39,21 @@ public abstract class FirewindComponentBase : ComponentBase, IFirewindComponent
     /// </summary>
     protected override void OnParametersSet()
     {
-        if (this.AdditionalAttributes.TryGetValue("id", out var attr1) && attr1 is string id)
+        var additionalAttributes = this.AdditionalAttributes ?? EmptyAttributes;
+
+        if (additionalAttributes.TryGetValue("id", out var attr1) && attr1 is string id)
         {
             this.Id = id;
         }
 
         this.CssClasses = new(this.CssClass);
 
-        if (this.AdditionalAttributes.TryGetValue("class", out var attr2) && attr2 is string classNames)
+        if (additionalAttributes.TryGetValue("class", out var attr2) && attr2 is string classNames)
         {
             this.CssClasses.Add(classNames);
         }
 
-        this.ComponentAttributes = new(this.AdditionalAttributes)
+        this.ComponentAttributes = new(additionalAttributes)
         {
             ["id"] = this.Id,
             ["class"] = this.CssClasses.ToString()

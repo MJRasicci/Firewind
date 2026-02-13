@@ -15,7 +15,7 @@ public interface IDataComponent<TDataItem> : IFirewindComponent
     /// </summary>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> that the task will observe for cancellation requests.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation of data binding.</returns>
-    Task BindDataAsync(CancellationToken cancellationToken);
+    public Task BindDataAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets or sets the source of data that the component consumes.
@@ -23,7 +23,7 @@ public interface IDataComponent<TDataItem> : IFirewindComponent
     /// <value>
     /// An <see cref="IDataSource{TDataItem}"/> that provides the data to be rendered by the component.
     /// </value>
-    IDataSource<TDataItem> DataSource { get; set; }
+    public IDataSource<TDataItem> DataSource { get; set; }
 
     /// <summary>
     /// Gets or sets the template used for rendering each data item within the component.
@@ -32,5 +32,5 @@ public interface IDataComponent<TDataItem> : IFirewindComponent
     /// A <see cref="RenderFragment{TDataItem}"/> that generates the markup for a single data item.
     /// The template can be defined inline or as a separate Razor component.
     /// </value>
-    RenderFragment<TDataItem>? ItemTemplate { get; set; }
+    public RenderFragment<TDataItem>? ItemTemplate { get; set; }
 }
