@@ -1,9 +1,12 @@
 @import "tailwindcss";
 
-@plugin "@tailwindcss/container-queries";
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/aspect-ratio";
+
+@plugin "./tailwind-scrollbar.mjs" {
+	nocompatible: true;
+}
 
 @plugin "./daisyui.mjs" {
 	themes: all, light --default, dark --prefersdark;
@@ -17,7 +20,7 @@
 */
 
 @source "../Components/";
-@source "../../Firewind/Components";
+@source "../../Firewind/Components/";
 
 @layer base {
 	:root .prose {
