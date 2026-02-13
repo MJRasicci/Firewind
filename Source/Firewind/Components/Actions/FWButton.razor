@@ -39,38 +39,11 @@
         }
     }
     
-    protected override string CssClass => string.Join(' ',
-        "fw-btn",
-        this.Shape switch
-        {
-            ButtonShape.Wide => "fw-btn-wide",
-            ButtonShape.Block => "fw-btn-block",
-            ButtonShape.Square => "fw-btn-square",
-            ButtonShape.Circle => "fw-btn-circle",
-            _ => default
-        },
-        this.Outline ? "fw-btn-outline" : default,
-        this.Style switch
-        {
-            ButtonStyle.Neutral => "fw-btn-neutral",
-            ButtonStyle.Primary => "fw-btn-primary",
-            ButtonStyle.Secondary => "fw-btn-secondary",
-            ButtonStyle.Accent => "fw-btn-accent",
-            ButtonStyle.Info => "fw-btn-info",
-            ButtonStyle.Success => "fw-btn-success",
-            ButtonStyle.Warning => "fw-btn-warning",
-            ButtonStyle.Error => "fw-btn-error",
-            ButtonStyle.Ghost => "fw-btn-ghost",
-            ButtonStyle.Link => "fw-btn-link",
-            _ => default
-        },
-        this.Size switch
-        {
-            ComponentSize.Tiny => "fw-btn-xs",
-            ComponentSize.Small => "fw-btn-sm",
-            ComponentSize.Large => "fw-btn-lg",
-            ComponentSize.Responsive => "fw-btn-xs sm:fw-btn-sm md:fw-btn-md lg:fw-btn-lg",
-            _ => default
-        },
-        this.Active ? "fw-btn-active" : default);
+    protected override string CssClass => new VariantClassBuilder("fw-btn")
+        .AddVariant(this.Shape, static shape => shape.ClassNames())
+        .AddIf(this.Outline, "fw-btn-outline")
+        .AddVariant(this.Style, static style => style.ClassNames())
+        .AddVariant(this.Size, static size => size.ButtonClassNames())
+        .AddIf(this.Active, "fw-btn-active")
+        .Build();
 }

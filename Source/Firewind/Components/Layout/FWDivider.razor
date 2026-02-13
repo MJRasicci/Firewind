@@ -1,4 +1,9 @@
 @namespace Firewind.Components
 @inherits FirewindComponentBase
 
-<div class="fw-divider"></div>
+<div @attributes="ComponentAttributes"></div>
+
+@code
+{
+    protected override string CssClass => "fw-divider";
+}

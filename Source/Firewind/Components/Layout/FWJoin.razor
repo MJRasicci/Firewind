@@ -1,10 +1,14 @@
 @namespace Firewind.Components
 @inherits FirewindComponentBase
 
-<div class="fw-join">
-
+<div @attributes="ComponentAttributes">
+    @ChildContent
 </div>
 
 @code
 {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    protected override string CssClass => "fw-join";
 }

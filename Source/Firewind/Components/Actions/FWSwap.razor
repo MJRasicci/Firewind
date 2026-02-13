@@ -17,13 +17,8 @@
     [Parameter] public bool State { get; set; }
     [Parameter] public SwapStyle Style { get; set; }
 
-    protected override string CssClass => string.Join(' ',
-        "fw-swap",
-        Style switch
-        {
-            SwapStyle.Rotate => "fw-swap-rotate",
-            SwapStyle.Flip => "fw-swap-flip",
-            _ => default
-        },
-        this.State ? "fw-swap-active" : default);
+    protected override string CssClass => new VariantClassBuilder("fw-swap")
+        .AddVariant(this.Style, static style => style.ClassNames())
+        .AddIf(this.State, "fw-swap-active")
+        .Build();
 }
