@@ -3,7 +3,7 @@
 
 <details @attributes="ComponentAttributes">
     @ButtonTemplate(this.Label)
-    <div class="fw-dropdown-content z-[1] shadow bg-base-300 rounded-box">
+    <div class="@DropdownContentCssClass">
         @ChildContent
     </div>
 </details>
@@ -28,6 +28,27 @@
     {
         <FWButton As="summary" class="m-1">@label</FWButton>
     };
+
+    /// <summary>
+    /// Gets or sets the theme color used for the dropdown content surface.
+    /// </summary>
+    [Parameter]
+    public ThemeColor ContentColor { get; set; } = ThemeColor.Base300;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether glow classes should be applied to dropdown content.
+    /// </summary>
+    [Parameter]
+    public bool ContentGlow { get; set; }
+
+    /// <summary>
+    /// Gets the composed CSS class string for the dropdown content container.
+    /// </summary>
+    private string DropdownContentCssClass => new VariantClassBuilder("fw-dropdown-content z-[1] rounded-box")
+        .AddVariant(this.ContentColor, static color => color.BackgroundClasses())
+        .AddIf(this.ContentGlow, this.ContentColor.GlowClasses())
+        .AddIf(!this.ContentGlow, "shadow")
+        .Build();
 
     /// <summary>
     /// Gets the root CSS class for the dropdown component.
