@@ -1,0 +1,136 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+@* In DaisyUI, if a checked checkbox input or a checked radio input with theme-controller class exists in the page, The page will have the same theme as that input's value.
+
+    Here is an example of a theme controller using a dropdown:
+
+    <div class="dropdown mb-72">
+      <div tabindex="0" role="button" class="btn m-1">
+        Theme
+        <svg
+          width="12px"
+          height="12px"
+          class="inline-block h-2 w-2 fill-current opacity-60"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 2048 2048">
+          <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
+        </svg>
+      </div>
+      <ul tabindex="-1" class="dropdown-content bg-base-300 rounded-box z-1 w-52 p-2 shadow-2xl">
+        <li>
+          <input
+            type="radio"
+            name="theme-dropdown"
+            class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+            aria-label="Default"
+            value="default" />
+        </li>
+        <li>
+          <input
+            type="radio"
+            name="theme-dropdown"
+            class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+            aria-label="Retro"
+            value="retro" />
+        </li>
+        <li>
+          <input
+            type="radio"
+            name="theme-dropdown"
+            class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+            aria-label="Cyberpunk"
+            value="cyberpunk" />
+        </li>
+        <li>
+          <input
+            type="radio"
+            name="theme-dropdown"
+            class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+            aria-label="Valentine"
+            value="valentine" />
+        </li>
+        <li>
+          <input
+            type="radio"
+            name="theme-dropdown"
+            class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+            aria-label="Aqua"
+            value="aqua" />
+        </li>
+      </ul>
+    </div>
+
+    Our FWThemeController component should use an FWDropdown with an FWMenu inside where each menu item uses a radio input tied to a template like this to show a theme preview:
+
+    <div class="border-base-content/20 hover:border-base-content/40 overflow-hidden rounded-lg border outline-2 outline-offset-2 outline-transparent" data-act-class="outline-base-content!" data-set-theme="@theme">
+        <div class="bg-base-100 text-base-content w-full cursor-pointer font-sans" data-theme="@theme">
+            <div class="grid grid-cols-5 grid-rows-3">
+                <div class="bg-base-200 col-start-1 row-span-2 row-start-1"></div>
+                <div class="bg-base-300 col-start-1 row-start-3"></div>
+                <div class="bg-base-100 col-span-4 col-start-2 row-span-3 row-start-1 flex flex-col gap-1 p-2">
+                    <div class="font-bold">@theme</div>
+                    <div class="flex flex-wrap gap-1">
+                        <div class="bg-primary flex aspect-square w-5 items-center justify-center rounded lg:w-6">
+                            <div class="text-primary-content text-sm font-bold">A</div>
+                        </div>
+                        <div class="bg-secondary flex aspect-square w-5 items-center justify-center rounded lg:w-6">
+                            <div class="text-secondary-content text-sm font-bold">A</div>
+                        </div>
+                        <div class="bg-accent flex aspect-square w-5 items-center justify-center rounded lg:w-6">
+                            <div class="text-accent-content text-sm font-bold">A</div>
+                        </div>
+                        <div class="bg-neutral flex aspect-square w-5 items-center justify-center rounded lg:w-6">
+                            <div class="text-neutral-content text-sm font-bold">A</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    When a user selects a theme, we need to use jsinterop to save the active theme to local storage. By default, FWThemeController should show all themes, but users should be able to modify the data source to add custom ones or show only a subset depending on their daisyui configuration.
+*@
+
+@code
+{
+    // Replace this with an IDataSource with a default value of an InMemoryDataSource containing all themes
+    [Parameter]
+    public IEnumerable<string> Themes { get; set; } = [
+        "light",
+        "dark",
+        "cupcake",
+        "bumblebee",
+        "emerald",
+        "corporate",
+        "synthwave",
+        "retro",
+        "cyberpunk",
+        "valentine",
+        "halloween",
+        "garden",
+        "forest",
+        "aqua",
+        "lofi",
+        "pastel",
+        "fantasy",
+        "wireframe",
+        "black",
+        "luxury",
+        "dracula",
+        "cmyk",
+        "autumn",
+        "business",
+        "acid",
+        "lemonade",
+        "night",
+        "coffee",
+        "winter",
+        "dim",
+        "nord",
+        "sunset",
+        "caramellatte",
+        "abyss",
+        "silk"
+    ];
+}
