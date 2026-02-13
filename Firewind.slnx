@@ -1,4 +1,13 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="LICENSE.md" />
+    <File Path="README.md" />
+  </Folder>
   <Folder Name="/Source/">
     <Project Path="Source/Firewind.Showcase/Firewind.Showcase.csproj" />
     <Project Path="Source/Firewind/Firewind.csproj" />

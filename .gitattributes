@@ -1,0 +1,8 @@
+# Normalize all text files to LF in the repo
+* text=auto eol=lf
+
+# Explicit overrides for common Windows-specific files
+*.sln text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf

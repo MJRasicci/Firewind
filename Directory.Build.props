@@ -1,0 +1,52 @@
+<Project>
+
+  <PropertyGroup Label="Build Properties">
+    <LangVersion>latest</LangVersion>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>All</AnalysisMode>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
+    <NoWarn>CA1812</NoWarn>
+  </PropertyGroup>
+  
+  <PropertyGroup Label="Test Project Build Properties" Condition="$(MSBuildProjectName.EndsWith('Tests'))">
+    <!--
+      # CA1707: Identifiers should not contain underscores
+      # Justification: Test method names may contain underscores
+      # https://docs.microsoft.com/en-us/visualstudio/code-quality/ca1707
+    -->
+    <NoWarn>CA1707;$(NoWarn)</NoWarn>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <IsTestProject>true</IsTestProject>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+  </PropertyGroup>
+  
+  <PropertyGroup Label="Package/Assembly Manifest Properties">
+    <IsPackable>false</IsPackable>
+    <Authors>Michael J. Rasicci</Authors>
+    <Company>MJRasicci</Company>
+    <Product>$(MSBuildProjectName)</Product>
+    <PackageId>$(MSBuildProjectName)</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/$(Company)/$(SolutionName)</PackageProjectUrl>
+    <PackageReleaseNotes>$(PackageProjectUrl)/releases</PackageReleaseNotes>
+    <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Copyright>Copyright © $(Company) $([System.DateTime]::Now.ToString(yyyy))</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Versioning">
+    <MinVerMinimumMajorMinor>0.1</MinVerMinimumMajorMinor>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    <MinVerDefaultPreReleaseIdentifiers>dev</MinVerDefaultPreReleaseIdentifiers>
+    <MinVerVerbosity>normal</MinVerVerbosity>
+  </PropertyGroup>
+
+</Project>
