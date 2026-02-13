@@ -1,5 +1,5 @@
 <div class="my-2 w-52 h-full border fw-scrollable">
-    <FWMenu DataSource="menuData">
+    <FWMenu DataSource="menuData" Orientation="MenuOrientation.Vertical" Size="MenuSize.Small">
         <ItemTemplate>
             <a @onclick="() => MenuItemClicked(context)">@context?.ToString()</a>
         </ItemTemplate>

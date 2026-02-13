@@ -1,0 +1,17 @@
+<FWCodeView SourceCode="@SampleCode" Language="csharp" class="h-72 w-full" />
+
+@code {
+    private const string SampleCode =
+"""
+public static class MathHelpers
+{
+    public static int Clamp(int value, int min, int max)
+    {
+        if (value < min) return min;
+        if (value > max) return max;
+
+        return value;
+    }
+}
+""";
+}

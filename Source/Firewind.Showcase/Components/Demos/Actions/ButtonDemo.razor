@@ -1,0 +1,18 @@
+<div class="flex flex-wrap gap-2 items-center justify-center px-2">
+    <FWButton Style="ButtonStyle.Primary" Size="ComponentSize.Responsive" OnClick="OnButtonClick">
+        Times Clicked: @Clicks
+    </FWButton>
+
+    <FWButton Style="ButtonStyle.Secondary" Dash="true">Dash</FWButton>
+    <FWButton Style="ButtonStyle.Success" Soft="true">Soft</FWButton>
+    <FWButton Style="ButtonStyle.Ghost" Shape="ButtonShape.Circle">?</FWButton>
+</div>
+
+@code {
+    private int Clicks { get; set; }
+
+    private void OnButtonClick()
+    {
+        this.Clicks++;
+    }
+}

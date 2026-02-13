@@ -1,0 +1,29 @@
+<FWModal @bind-Open="ModalShown" Placement="@placement">
+    <form method="dialog">
+        <FWButton Size="ComponentSize.Small" Style="ButtonStyle.Ghost" Shape="ButtonShape.Circle" type="submit" class="absolute right-2 top-2">✕</FWButton>
+    </form>
+    <h3 class="font-bold text-lg">Modal Placement: @placement</h3>
+    <p class="py-4">Press ESC, click ✕, or click the backdrop to close.</p>
+</FWModal>
+
+<div class="flex flex-wrap gap-2 items-center justify-center px-2">
+    <FWButton Size="ComponentSize.Small" Style="ButtonStyle.Info" OnClick="@(_ => ShowModal(ModalPlacement.Default))">Default</FWButton>
+    <FWButton Size="ComponentSize.Small" Style="ButtonStyle.Primary" OnClick="@(_ => ShowModal(ModalPlacement.Top))">Top</FWButton>
+    <FWButton Size="ComponentSize.Small" Style="ButtonStyle.Secondary" OnClick="@(_ => ShowModal(ModalPlacement.Middle))">Middle</FWButton>
+    <FWButton Size="ComponentSize.Small" Style="ButtonStyle.Accent" OnClick="@(_ => ShowModal(ModalPlacement.Bottom))">Bottom</FWButton>
+    <FWButton Size="ComponentSize.Small" Style="ButtonStyle.Success" OnClick="@(_ => ShowModal(ModalPlacement.Start))">Start</FWButton>
+    <FWButton Size="ComponentSize.Small" Style="ButtonStyle.Warning" OnClick="@(_ => ShowModal(ModalPlacement.End))">End</FWButton>
+</div>
+
+Is Modal Shown? @ModalShown
+
+@code {
+    private bool ModalShown { get; set; }
+    private ModalPlacement placement = ModalPlacement.Default;
+
+    private void ShowModal(ModalPlacement newPlacement)
+    {
+        placement = newPlacement;
+        ModalShown = true;
+    }
+}
