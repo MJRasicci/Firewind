@@ -1,7 +1,17 @@
 namespace Firewind.Style;
 
+/// <summary>
+/// Resolves CSS classes derived from <see cref="ThemeColor"/> values.
+/// </summary>
 public static class ThemeStyleExtensions
 {
+    /// <summary>
+    /// Gets background and foreground classes for a theme color.
+    /// </summary>
+    /// <param name="color">The theme color token.</param>
+    /// <returns>
+    /// A CSS class string suitable for background usage.
+    /// </returns>
     public static string BackgroundClasses(this ThemeColor color) => color switch
     {
         ThemeColor.Base300 => "bg-base-300",
@@ -18,6 +28,13 @@ public static class ThemeStyleExtensions
         _ => string.Empty
     };
 
+    /// <summary>
+    /// Gets glow or shadow classes for a theme color.
+    /// </summary>
+    /// <param name="color">The theme color token.</param>
+    /// <returns>
+    /// A CSS class string suitable for glow/shadow styling.
+    /// </returns>
     public static string GlowClasses(this ThemeColor color) => color switch
     {
         ThemeColor.Base300 => "shadow shadow-base-300/40",

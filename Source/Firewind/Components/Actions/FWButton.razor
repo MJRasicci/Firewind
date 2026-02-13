@@ -7,12 +7,41 @@
 
 @code
 {
-    [Parameter] public bool Disabled { get; set; }
-    [Parameter] public bool Active { get; set; }
-    [Parameter] public ComponentSize Size { get; set; }
-    [Parameter] public ButtonStyle Style { get; set; }
-    [Parameter] public ButtonShape Shape { get; set; }
-    [Parameter] public bool Outline { get; set; }
+    /// <summary>
+    /// Gets or sets a value indicating whether the button is disabled.
+    /// </summary>
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the active modifier class is applied.
+    /// </summary>
+    [Parameter]
+    public bool Active { get; set; }
+
+    /// <summary>
+    /// Gets or sets the button size variant.
+    /// </summary>
+    [Parameter]
+    public ComponentSize Size { get; set; }
+
+    /// <summary>
+    /// Gets or sets the visual style variant.
+    /// </summary>
+    [Parameter]
+    public ButtonStyle Style { get; set; }
+
+    /// <summary>
+    /// Gets or sets the button shape variant.
+    /// </summary>
+    [Parameter]
+    public ButtonShape Shape { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the outline style should be applied.
+    /// </summary>
+    [Parameter]
+    public bool Outline { get; set; }
 
     /// <summary>
     /// The element to be used for rendering the button. Defaults to 'button'.
@@ -26,9 +55,15 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>
+    /// Gets or sets the callback invoked when the button is clicked.
+    /// </summary>
     [Parameter]
     public EventCallback<MouseEventArgs> OnClick { get; set; }
 
+    /// <summary>
+    /// Ensures default element attributes are applied after parameters are set.
+    /// </summary>
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
@@ -39,6 +74,9 @@
         }
     }
     
+    /// <summary>
+    /// Gets the composed CSS class string for the button instance.
+    /// </summary>
     protected override string CssClass => new VariantClassBuilder("fw-btn")
         .AddVariant(this.Shape, static shape => shape.ClassNames())
         .AddIf(this.Outline, "fw-btn-outline")

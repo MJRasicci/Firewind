@@ -7,8 +7,14 @@
 
 @code
 {
+    /// <summary>
+    /// Gets or sets the content rendered inside the join container.
+    /// </summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>
+    /// Gets the root CSS class for the join component.
+    /// </summary>
     protected override string CssClass => "fw-join";
 }

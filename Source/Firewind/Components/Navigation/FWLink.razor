@@ -5,8 +5,14 @@
 
 @code
 {
+    /// <summary>
+    /// Gets or sets the content rendered inside the anchor element.
+    /// </summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>
+    /// Gets the root CSS class for the link component.
+    /// </summary>
     protected override string CssClass => "fw-link";
 }

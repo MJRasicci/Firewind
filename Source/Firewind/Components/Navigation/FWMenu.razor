@@ -11,8 +11,14 @@
 
 @code
 {
+    /// <summary>
+    /// Gets the root CSS class for the menu component.
+    /// </summary>
     protected override string CssClass => "fw-menu";
 
+    /// <summary>
+    /// Gets the fallback template used when <see cref="FirewindDataComponentBase{TDataItem}.ItemTemplate"/> is not provided.
+    /// </summary>
     protected override RenderFragment<TMenuItem> DefaultItemTemplate => (context) => (__builder) =>
     {
         <a>@context?.ToString()</a>

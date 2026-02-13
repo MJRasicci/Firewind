@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Components;
 public abstract class FirewindComponentBase : ComponentBase, IFirewindComponent
 {
 
+    /// <summary>
+    /// Gets or sets additional attributes captured from the component invocation.
+    /// </summary>
     /// <remarks>
     /// This property captures all unmatched attributes. If an 'id' attribute is provided, it will be used
     /// as the component's HTML 'id' attribute; otherwise, a unique identifier will be generated.
@@ -54,7 +57,13 @@ public abstract class FirewindComponentBase : ComponentBase, IFirewindComponent
         };
     }
 
+    /// <summary>
+    /// Gets base CSS classes for the component before unmatched class attributes are merged.
+    /// </summary>
     protected virtual string CssClass => string.Empty;
 
+    /// <summary>
+    /// Gets or sets the internal CSS class list used to build the final rendered <c>class</c> attribute.
+    /// </summary>
     internal CssClassList CssClasses { get; set; } = [];
 }

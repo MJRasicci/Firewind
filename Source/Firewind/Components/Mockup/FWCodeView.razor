@@ -11,16 +11,34 @@
 </div>
 
 @code {
-    [Parameter] public string SourceCode { get; set; } = string.Empty;
-    [Parameter] public string Language { get; set; } = string.Empty;
+    /// <summary>
+    /// Gets or sets the source code text to render.
+    /// </summary>
+    [Parameter]
+    public string SourceCode { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the ColorCode language identifier used for syntax highlighting.
+    /// </summary>
+    [Parameter]
+    public string Language { get; set; } = string.Empty;
 
     private static readonly string[] LineSeparators = ["\r\n", "\n", "\r"];
     private readonly SourceCodeFormatter formatter = new();
 
+    /// <summary>
+    /// Gets formatted markup for the configured source code and language.
+    /// </summary>
     private MarkupString FormattedSource => this.ResolveLanguage() is ILanguage language
         ? this.formatter.GetMarkupString(this.SourceCode, language)
         : this.BuildPlainTextMarkup();
 
+    /// <summary>
+    /// Resolves the configured language identifier to a ColorCode language descriptor.
+    /// </summary>
+    /// <returns>
+    /// A resolved <see cref="ILanguage"/> instance, or <see langword="null"/> if the id cannot be resolved.
+    /// </returns>
     private ILanguage? ResolveLanguage()
     {
         if (string.IsNullOrWhiteSpace(this.Language))
@@ -31,6 +49,10 @@
         return Languages.FindById(this.Language);
     }
 
+    /// <summary>
+    /// Builds HTML markup that renders escaped plain text with line numbers.
+    /// </summary>
+    /// <returns>A <see cref="MarkupString"/> containing escaped code lines.</returns>
     private MarkupString BuildPlainTextMarkup()
     {
         var lines = this.SourceCode.Split(LineSeparators, StringSplitOptions.None);
@@ -48,5 +70,8 @@
         return new MarkupString(buffer.ToString());
     }
 
+    /// <summary>
+    /// Gets the root CSS classes for the code view component.
+    /// </summary>
     protected override string CssClass => "fw-mockup-code border border-base-300 pb-0 flex flex-col overflow-hidden";
 }

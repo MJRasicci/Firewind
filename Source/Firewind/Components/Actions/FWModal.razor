@@ -12,17 +12,33 @@
 
 @code
 {
+    /// <summary>
+    /// Gets or sets a value indicating whether the modal is open.
+    /// </summary>
     [Parameter]
     public bool Open { get; set; }
 
+    /// <summary>
+    /// Gets or sets the callback raised when <see cref="Open"/> changes.
+    /// </summary>
     [Parameter]
     public EventCallback<bool> OpenChanged { get; set; }
 
+    /// <summary>
+    /// Gets or sets content rendered inside the modal body.
+    /// </summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>
+    /// Gets the root CSS class for the modal component.
+    /// </summary>
     protected override string CssClass => "fw-modal";
 
+    /// <summary>
+    /// Handles the dialog close event and notifies binders that the modal closed.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous callback invocation.</returns>
     private async Task OnClosedAsync()
     {
         this.Open = false;

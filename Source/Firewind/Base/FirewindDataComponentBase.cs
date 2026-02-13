@@ -76,8 +76,7 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
 
     /// <summary>
     /// Binds data to the component asynchronously, ensuring that the data is up-to-date and ready for rendering.
-    /// This method must be implemented to handle fetching data from <see cref="DataSource"/> and updating
-    /// the component state.
+    /// The method fetches data from <see cref="DataSource"/>, updates <see cref="Items"/>, and triggers rerendering.
     /// </summary>
     /// <param name="cancellationToken">A token that can be used to signal cancellation of the asynchronous operation.</param>
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
@@ -109,6 +108,7 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
     /// event to receive notifications about data updates. These notifications trigger data re-binding.
     /// </remarks>
     [Parameter]
+    [EditorRequired]
     public IDataSource<TDataItem> DataSource
     {
         get => this.dataSource;
@@ -139,6 +139,10 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
     [Parameter]
     public RenderFragment<TDataItem>? ItemTemplate { get; set; }
 
+    /// <summary>
+    /// Rebinds data after parameters are set when the data source has changed.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     protected override async Task OnParametersSetAsync()
     {
         if (this.dataSource is not null && this.isDataSourceDirty)
@@ -150,7 +154,22 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
         await base.OnParametersSetAsync();
     }
 
+    /// <summary>
+    /// Releases resources used by the component and detaches data source subscriptions.
+    /// </summary>
     public void Dispose()
+    {
+        this.Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Releases managed resources when <paramref name="disposing"/> is <see langword="true"/>.
+    /// </summary>
+    /// <param name="disposing">
+    /// <see langword="true"/> to dispose managed resources; otherwise <see langword="false"/>.
+    /// </param>
+    protected virtual void Dispose(bool disposing)
     {
         if (this.isDisposed)
         {
@@ -159,10 +178,13 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
 
         this.isDisposed = true;
 
+        if (!disposing)
+        {
+            return;
+        }
+
         this.disposeTokenSource.Cancel();
-
         this.dataSource?.DataChanged -= OnDataChanged;
-
         this.disposeTokenSource.Dispose();
     }
 }

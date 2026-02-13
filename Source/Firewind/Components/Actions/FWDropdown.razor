@@ -10,14 +10,27 @@
 
 @code
 {
-    [Parameter] public string Label { get; set; } = string.Empty;
+    /// <summary>
+    /// Gets or sets the text label passed to <see cref="ButtonTemplate"/>.
+    /// </summary>
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Gets or sets the dropdown body content.
+    /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>
+    /// Gets or sets the template used to render the dropdown trigger element.
+    /// </summary>
     [Parameter] public RenderFragment<string> ButtonTemplate { get; set; } = label => __builder =>
     {
         <FWButton As="summary" class="m-1">@label</FWButton>
     };
 
+    /// <summary>
+    /// Gets the root CSS class for the dropdown component.
+    /// </summary>
     protected override string CssClass => "fw-dropdown";
 }
