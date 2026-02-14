@@ -1,4 +1,4 @@
-namespace Firewind.Style;
+namespace Firewind.Variant;
 
 /// <summary>
 /// Resolves CSS classes derived from <see cref="ThemeColor"/> values.

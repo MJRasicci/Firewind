@@ -1,4 +1,4 @@
-namespace Firewind.Style;
+namespace Firewind.Variant;
 
 /// <summary>
 /// Defines visual variants for <c>FWButton</c>.

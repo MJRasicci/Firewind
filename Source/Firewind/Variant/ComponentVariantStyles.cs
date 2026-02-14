@@ -1,4 +1,4 @@
-namespace Firewind.Style;
+namespace Firewind.Variant;
 
 /// <summary>
 /// Represents placement options for dropdown trigger alignment.

@@ -1,6 +1,6 @@
 namespace Firewind.Base;
 
-using Firewind.Style;
+using Firewind.Variant;
 using Microsoft.AspNetCore.Components;
 
 /// <summary>

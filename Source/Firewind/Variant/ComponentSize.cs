@@ -1,4 +1,4 @@
-namespace Firewind.Style;
+namespace Firewind.Variant;
 
 /// <summary>
 /// Represents standard size options used by Firewind components.

@@ -1,4 +1,4 @@
-namespace Firewind.Style;
+namespace Firewind.Variant;
 
 /// <summary>
 /// Represents directional placement options for component elements.

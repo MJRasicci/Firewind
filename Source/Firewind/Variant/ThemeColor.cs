@@ -1,7 +1,7 @@
-namespace Firewind.Style;
+namespace Firewind.Variant;
 
 /// <summary>
-/// Represents semantic theme color tokens used by Firewind styles.
+/// Represents semantic theme color tokens used by Firewind.Variants.
 /// </summary>
 public enum ThemeColor
 {
