@@ -7,8 +7,8 @@
 
 <FWJoin class="my-4 w-full xl:w-5/6 mx-auto flex flex-col lg:flex-row">
     <div class="fw-join-item flex-1 pb-2 lg:pb-0 lg:pr-2 overflow-hidden">
-        <FWBrowserMockup Address="https://example.com/demos/@(Demo.Name)" class="h-96">
-            <div class="flex flex-col items-center justify-center w-full h-192 h-96 fw-scrollable bg-base-100">
+        <FWBrowserMockup Address="@($"https://example.com/demos/{Demo.Name}")" class="h-96">
+            <div class="flex min-h-full w-full flex-col items-center justify-start">
                 <DynamicComponent Type="Demo" />
             </div>
         </FWBrowserMockup>
