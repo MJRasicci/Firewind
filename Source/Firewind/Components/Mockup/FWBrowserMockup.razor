@@ -1,0 +1,44 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div @attributes="ComponentAttributes">
+    <div class="fw-mockup-browser-toolbar">
+        <div class="fw-input">@this.Address</div>
+    </div>
+
+    <div class="min-h-0 flex-1 overflow-hidden bg-base-100">
+        <div class="@this.ViewportCssClass">
+            @this.ChildContent
+        </div>
+    </div>
+</div>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets the address value rendered in the browser toolbar field.
+    /// </summary>
+    [Parameter]
+    public string Address { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the content rendered inside the browser viewport.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets optional classes applied to the scrollable viewport content area.
+    /// </summary>
+    [Parameter]
+    public string ViewportClass { get; set; } = string.Empty;
+
+    private string ViewportCssClass => new VariantClassBuilder("h-full w-full fw-scrollable p-4")
+        .Add(this.ViewportClass)
+        .Build();
+
+    /// <summary>
+    /// Gets the root CSS classes for the browser mockup component.
+    /// </summary>
+    protected override string CssClass => "fw-mockup-browser border border-base-300 bg-base-300 flex flex-col overflow-hidden";
+}
