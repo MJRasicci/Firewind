@@ -124,18 +124,18 @@
         if (!this.OpenOnHover)
         {
             this.isHoverOpen = false;
-            this.ComponentAttributes.Remove("open");
+            this.MutableComponentAttributes.Remove("open");
 
             return;
         }
 
         if (this.isHoverOpen)
         {
-            this.ComponentAttributes["open"] = "open";
+            this.MutableComponentAttributes["open"] = "open";
         }
         else
         {
-            this.ComponentAttributes.Remove("open");
+            this.MutableComponentAttributes.Remove("open");
         }
     }
 }

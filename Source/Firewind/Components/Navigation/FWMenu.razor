@@ -30,7 +30,7 @@
     {
         base.OnParametersSet();
 
-        if (this.ComponentAttributes.TryGetValue("style", out var styleAttribute) && styleAttribute is string styleValue)
+        if (this.MutableComponentAttributes.TryGetValue("style", out var styleAttribute) && styleAttribute is string styleValue)
         {
             if (styleValue.Contains("flex-wrap", StringComparison.OrdinalIgnoreCase))
             {
@@ -38,11 +38,11 @@
             }
 
             var normalizedStyle = styleValue.Trim().TrimEnd(';');
-            this.ComponentAttributes["style"] = $"{normalizedStyle}; flex-wrap: nowrap;";
+            this.MutableComponentAttributes["style"] = $"{normalizedStyle}; flex-wrap: nowrap;";
             return;
         }
 
-        this.ComponentAttributes["style"] = "flex-wrap: nowrap;";
+        this.MutableComponentAttributes["style"] = "flex-wrap: nowrap;";
     }
 
     /// <summary>

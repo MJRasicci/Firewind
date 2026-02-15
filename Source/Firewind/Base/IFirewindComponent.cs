@@ -18,8 +18,8 @@ public interface IFirewindComponent
     /// These are attributes not explicitly defined by the component's properties.
     /// </summary>
     /// <value>
-    /// A <see cref="Dictionary{TKey, TValue}"/> containing the attributes as key-value pairs,
+    /// A read-only collection of attributes as key-value pairs,
     /// with the key being the attribute name and the value being the attribute value.
     /// </value>
-    public Dictionary<string, object> ComponentAttributes { get; }
+    public IReadOnlyDictionary<string, object> ComponentAttributes { get; }
 }

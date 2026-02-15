@@ -84,37 +84,42 @@
 
         if (isButtonElement)
         {
-            if (!this.ComponentAttributes.ContainsKey("type"))
+            if (!this.MutableComponentAttributes.ContainsKey("type"))
             {
-                this.ComponentAttributes["type"] = "button";
+                this.MutableComponentAttributes["type"] = "button";
             }
 
             if (this.Disabled)
             {
-                this.ComponentAttributes["disabled"] = true;
+                this.MutableComponentAttributes["disabled"] = true;
             }
             else
             {
-                this.ComponentAttributes.Remove("disabled");
+                this.MutableComponentAttributes.Remove("disabled");
             }
 
-            this.ComponentAttributes.Remove("aria-disabled");
+            this.MutableComponentAttributes.Remove("aria-disabled");
             return;
         }
 
-        this.ComponentAttributes.Remove("disabled");
+        this.MutableComponentAttributes.Remove("disabled");
 
         if (this.Disabled)
         {
-            this.ComponentAttributes["aria-disabled"] = "true";
-            if (!this.ComponentAttributes.ContainsKey("tabindex"))
+            this.MutableComponentAttributes["aria-disabled"] = "true";
+            if (!this.MutableComponentAttributes.ContainsKey("tabindex"))
             {
-                this.ComponentAttributes["tabindex"] = "-1";
+                this.MutableComponentAttributes["tabindex"] = "-1";
             }
         }
         else
         {
-            this.ComponentAttributes.Remove("aria-disabled");
+            this.MutableComponentAttributes.Remove("aria-disabled");
+
+            if (this.AdditionalAttributes is null || !this.AdditionalAttributes.ContainsKey("tabindex"))
+            {
+                this.MutableComponentAttributes.Remove("tabindex");
+            }
         }
     }
 

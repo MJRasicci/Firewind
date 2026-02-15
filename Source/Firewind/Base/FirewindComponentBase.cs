@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Components;
 public abstract class FirewindComponentBase : ComponentBase, IFirewindComponent
 {
     private static readonly IReadOnlyDictionary<string, object> EmptyAttributes = new Dictionary<string, object>();
+    private Dictionary<string, object> MutableAttributes { get; set; } = [];
 
     /// <summary>
     /// Gets or sets additional attributes captured from the component invocation.
@@ -23,10 +24,10 @@ public abstract class FirewindComponentBase : ComponentBase, IFirewindComponent
     public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
 
     /// <summary>
-    /// Gets or sets additional attributes that will be rendered with the component's HTML element
+    /// Gets additional attributes that will be rendered with the component's HTML element
     /// and are not explicitly captured by other component parameters.
     /// </summary>
-    public Dictionary<string, object> ComponentAttributes { get; private set; } = [];
+    public IReadOnlyDictionary<string, object> ComponentAttributes => this.MutableAttributes;
 
     /// <summary>
     /// Gets the component's unique identifier, which is used as the HTML 'id' attribute for the rendered element.
@@ -53,7 +54,7 @@ public abstract class FirewindComponentBase : ComponentBase, IFirewindComponent
             this.CssClasses.Add(classNames);
         }
 
-        this.ComponentAttributes = new(additionalAttributes)
+        this.MutableAttributes = new(additionalAttributes)
         {
             ["id"] = this.Id,
             ["class"] = this.CssClasses.ToString()
@@ -69,4 +70,9 @@ public abstract class FirewindComponentBase : ComponentBase, IFirewindComponent
     /// Gets or sets the internal CSS class list used to build the final rendered <c>class</c> attribute.
     /// </summary>
     internal CssClassList CssClasses { get; set; } = [];
+
+    /// <summary>
+    /// Gets the mutable component attribute dictionary for derived component implementations.
+    /// </summary>
+    protected Dictionary<string, object> MutableComponentAttributes => this.MutableAttributes;
 }
