@@ -5,11 +5,15 @@
     <File Path=".gitignore" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
     <File Path="LICENSE.md" />
     <File Path="README.md" />
   </Folder>
   <Folder Name="/Source/">
     <Project Path="Source/Firewind.Showcase/Firewind.Showcase.csproj" />
     <Project Path="Source/Firewind/Firewind.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/Firewind.UnitTests/Firewind.UnitTests.csproj" Id="b105c66e-d9a7-4559-bb22-e8aa8af10a7d" />
   </Folder>
 </Solution>
