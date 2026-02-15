@@ -1,0 +1,194 @@
+@namespace Firewind.Components
+@typeparam TKey where TKey : notnull
+@inherits FirewindComponentBase
+
+<CascadingValue Value="this" IsFixed="true">
+    <div @attributes="ComponentAttributes">
+        @ChildContent
+
+        @if (ResolveActiveItem() is { } activeItem)
+        {
+            @activeItem.ChildContent
+        }
+        else
+        {
+            @EmptyContent
+        }
+    </div>
+</CascadingValue>
+
+@code
+{
+    private readonly Dictionary<TKey, FWMultiViewItem<TKey>> items = [];
+    private readonly List<FWMultiViewItem<TKey>> orderedItems = [];
+
+    /// <summary>
+    /// Gets or sets the key for the currently active view item.
+    /// </summary>
+    /// <remarks>
+    /// When the key does not match any registered <see cref="FWMultiViewItem{TKey}"/>, the component renders
+    /// <see cref="EmptyContent"/> instead.
+    /// </remarks>
+    [Parameter]
+    public TKey? ActiveKey { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the first registered view item should be rendered when
+    /// <see cref="ActiveKey"/> is not provided.
+    /// </summary>
+    [Parameter]
+    public bool AutoSelectFirstItem { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets the content rendered when no active view item can be resolved.
+    /// </summary>
+    [Parameter]
+    public RenderFragment EmptyContent { get; set; } = static builder =>
+    {
+        builder.OpenElement(sequence: 0, elementName: "div");
+        builder.AddAttribute(sequence: 1, name: "class", value: "fw-skeleton h-32 w-full");
+        builder.CloseElement();
+    };
+
+    /// <summary>
+    /// Gets or sets the child view items contained by this multi-view.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets the root CSS class for the multi-view container.
+    /// </summary>
+    protected override string CssClass => "fw-multi-view";
+
+    /// <summary>
+    /// Registers a view item with this multi-view and enforces key uniqueness.
+    /// </summary>
+    /// <param name="item">The view item to register.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="item"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when <paramref name="item"/> has a null key or a duplicate key already exists.
+    /// </exception>
+    internal void RegisterItem(FWMultiViewItem<TKey> item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        if (item.Key is null)
+        {
+            throw new InvalidOperationException($"{nameof(FWMultiViewItem<TKey>)} keys must not be null.");
+        }
+
+        if (this.items.TryGetValue(item.Key, out var existingItem) && !ReferenceEquals(existingItem, item))
+        {
+            throw new InvalidOperationException($"Duplicate multi-view key '{item.Key}' detected.");
+        }
+
+        var didChange = false;
+
+        if (!this.orderedItems.Contains(item))
+        {
+            this.orderedItems.Add(item);
+            didChange = true;
+        }
+
+        if (!this.items.TryGetValue(item.Key, out var currentItem) || !ReferenceEquals(currentItem, item))
+        {
+            this.items[item.Key] = item;
+            didChange = true;
+        }
+
+        if (didChange)
+        {
+            OnItemsChanged();
+        }
+    }
+
+    /// <summary>
+    /// Unregisters a view item from this multi-view.
+    /// </summary>
+    /// <param name="item">The view item instance to unregister.</param>
+    /// <param name="key">The key that was associated with the registered item.</param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="item"/> or <paramref name="key"/> is <see langword="null"/>.
+    /// </exception>
+    internal void UnregisterItem(FWMultiViewItem<TKey> item, TKey key)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+        ArgumentNullException.ThrowIfNull(key);
+
+        var didChange = false;
+
+        if (this.items.TryGetValue(key, out var existingItem) && ReferenceEquals(existingItem, item))
+        {
+            this.items.Remove(key);
+            didChange = true;
+        }
+
+        if (this.orderedItems.Remove(item))
+        {
+            didChange = true;
+        }
+
+        if (didChange)
+        {
+            OnItemsChanged();
+        }
+    }
+
+    /// <summary>
+    /// Determines whether the view item for <paramref name="key"/> is currently active.
+    /// </summary>
+    /// <param name="key">The view item key to check.</param>
+    /// <returns>
+    /// <see langword="true"/> when the key resolves to the active item; otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="key"/> is <see langword="null"/>.</exception>
+    internal bool IsItemActive(TKey key)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        var activeItem = ResolveActiveItem();
+        return activeItem is not null && EqualityComparer<TKey>.Default.Equals(activeItem.Key, key);
+    }
+
+    /// <summary>
+    /// Queues a rerender after item registration state changes.
+    /// </summary>
+    /// <remarks>
+    /// This method is virtual to support deterministic unit testing of registration logic without requiring
+    /// an attached renderer.
+    /// </remarks>
+    protected virtual void OnItemsChanged() => _ = InvokeAsync(StateHasChanged);
+
+    /// <summary>
+    /// Resolves the currently active view item from the registered set.
+    /// </summary>
+    /// <returns>The active view item, or <see langword="null"/> when no active item can be resolved.</returns>
+    private FWMultiViewItem<TKey>? ResolveActiveItem()
+    {
+        if (this.ActiveKey is not null)
+        {
+            return this.items.TryGetValue(this.ActiveKey, out var activeItem) ? activeItem : null;
+        }
+
+        if (!this.AutoSelectFirstItem)
+        {
+            return null;
+        }
+
+        foreach (var item in this.orderedItems)
+        {
+            if (item.Key is null)
+            {
+                continue;
+            }
+
+            if (this.items.TryGetValue(item.Key, out var registeredItem) && ReferenceEquals(registeredItem, item))
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
+}

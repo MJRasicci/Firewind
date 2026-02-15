@@ -1,0 +1,74 @@
+<div class="w-full max-w-2xl px-2 space-y-4">
+    <div class="flex flex-wrap items-center justify-center gap-2">
+        <FWButton
+            Style="ButtonStyle.Primary"
+            Active="@(this.activeViewKey == OverviewKey)"
+            OnClick="@(_ => SetActiveView(OverviewKey))">
+            Overview
+        </FWButton>
+
+        <FWButton
+            Style="ButtonStyle.Secondary"
+            Active="@(this.activeViewKey == MetricsKey)"
+            OnClick="@(_ => SetActiveView(MetricsKey))">
+            Metrics
+        </FWButton>
+
+        <FWButton
+            Style="ButtonStyle.Accent"
+            Active="@(this.activeViewKey == ActivityKey)"
+            OnClick="@(_ => SetActiveView(ActivityKey))">
+            Activity
+        </FWButton>
+
+        <FWButton
+            Style="ButtonStyle.Ghost"
+            OnClick="@(_ => SetActiveView(MissingKey))">
+            Missing Key
+        </FWButton>
+    </div>
+
+    <FWMultiView ActiveKey="this.activeViewKey" class="w-full">
+        <FWMultiViewItem Key="@OverviewKey">
+            <div class="rounded-box bg-base-200 p-4">
+                <h3 class="text-lg font-semibold">Overview</h3>
+                <p class="mt-2 text-sm">This panel can contain any markup and remains isolated from navigation controls.</p>
+            </div>
+        </FWMultiViewItem>
+
+        <FWMultiViewItem Key="@MetricsKey">
+            <div class="rounded-box bg-base-200 p-4">
+                <h3 class="text-lg font-semibold">Metrics</h3>
+                <div class="mt-2 grid grid-cols-2 gap-3 text-sm">
+                    <div class="rounded-box bg-base-100 p-3">Uptime: <strong>99.98%</strong></div>
+                    <div class="rounded-box bg-base-100 p-3">Latency: <strong>42 ms</strong></div>
+                </div>
+            </div>
+        </FWMultiViewItem>
+
+        <FWMultiViewItem Key="@ActivityKey">
+            <div class="rounded-box bg-base-200 p-4">
+                <h3 class="text-lg font-semibold">Activity</h3>
+                <ul class="mt-2 list-inside list-disc text-sm">
+                    <li>Profile updated</li>
+                    <li>Policy acknowledged</li>
+                    <li>Export requested</li>
+                </ul>
+            </div>
+        </FWMultiViewItem>
+    </FWMultiView>
+</div>
+
+@code {
+    private const string OverviewKey = "overview";
+    private const string MetricsKey = "metrics";
+    private const string ActivityKey = "activity";
+    private const string MissingKey = "missing";
+
+    private string activeViewKey = OverviewKey;
+
+    private void SetActiveView(string key)
+    {
+        this.activeViewKey = key;
+    }
+}

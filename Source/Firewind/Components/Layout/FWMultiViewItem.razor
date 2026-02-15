@@ -1,0 +1,73 @@
+@namespace Firewind.Components
+@typeparam TKey where TKey : notnull
+@implements IDisposable
+
+@code
+{
+    private TKey? registeredKey;
+    private bool isRegistered;
+
+    /// <summary>
+    /// Gets or sets the unique key that identifies this view item within a <see cref="FWMultiView{TKey}"/>.
+    /// </summary>
+    [Parameter]
+    [EditorRequired]
+    public TKey Key { get; set; } = default!;
+
+    /// <summary>
+    /// Gets or sets the content associated with this view item.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the parent multi-view that owns this item.
+    /// </summary>
+    [CascadingParameter]
+    private FWMultiView<TKey>? Parent { get; set; }
+
+    /// <summary>
+    /// Synchronizes this item with the parent multi-view registration map.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when this item is not hosted inside <see cref="FWMultiView{TKey}"/> or when <see cref="Key"/> is null.
+    /// </exception>
+    protected override void OnParametersSet()
+    {
+        if (this.Parent is null)
+        {
+            throw new InvalidOperationException($"{nameof(FWMultiViewItem<TKey>)} must be nested inside {nameof(FWMultiView<TKey>)}.");
+        }
+
+        if (this.Key is null)
+        {
+            throw new InvalidOperationException($"{nameof(Key)} must not be null.");
+        }
+
+        if (this.isRegistered && this.registeredKey is not null && !EqualityComparer<TKey>.Default.Equals(this.registeredKey, this.Key))
+        {
+            this.Parent.UnregisterItem(this, this.registeredKey);
+            this.isRegistered = false;
+            this.registeredKey = default;
+        }
+
+        this.Parent.RegisterItem(this);
+        this.isRegistered = true;
+        this.registeredKey = this.Key;
+    }
+
+    /// <summary>
+    /// Removes this item from the parent multi-view registration map.
+    /// </summary>
+    public void Dispose()
+    {
+        if (!this.isRegistered || this.Parent is null || this.registeredKey is null)
+        {
+            return;
+        }
+
+        this.Parent.UnregisterItem(this, this.registeredKey);
+        this.registeredKey = default;
+        this.isRegistered = false;
+    }
+}
