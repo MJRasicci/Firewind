@@ -189,11 +189,11 @@ public static class JoinStyleExtensions
 public enum DividerOrientation
 {
     /// <summary>
-    /// Uses the default horizontal divider rendering.
+    /// Uses the vertical divider rendering.
     /// </summary>
     Vertical,
     /// <summary>
-    /// Uses the vertical divider rendering.
+    /// Uses the horizontal divider rendering.
     /// </summary>
     Horizontal
 }
