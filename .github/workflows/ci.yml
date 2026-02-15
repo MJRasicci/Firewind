@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore Firewind.slnx
+
+      - name: Build (Debug, warnings as errors)
+        run: dotnet build Firewind.slnx -c Release --no-restore
+
+      - name: Test (Debug, warnings as errors)
+        run: dotnet test --solution Firewind.slnx -c Release --no-build
