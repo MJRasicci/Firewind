@@ -2,6 +2,7 @@ namespace Firewind.Base;
 
 using Firewind.Data;
 using Microsoft.AspNetCore.Components;
+using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
 /// Serves as the base class for Firewind components that display data. It provides a framework for
@@ -23,17 +24,40 @@ public abstract class FirewindDataComponentBase<TDataItem> : FirewindComponentBa
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">Arguments of the event.</param>
-    private void OnDataChanged(object? sender, EventArgs e) => _ = InvokeAsync(async () =>
+    private void OnDataChanged(object? sender, EventArgs e)
+    {
+        if (this.isDisposed)
+        {
+            return;
+        }
+
+        _ = HandleDataChangedAsync();
+    }
+
+    /// <summary>
+    /// Rebinds data for a <see cref="IDataSource{TDataItem}.DataChanged"/> notification and dispatches errors
+    /// to Blazor's normal component exception flow.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [SuppressMessage(
+        "Design",
+        "CA1031:Do not catch general exception types",
+        Justification = "Exceptions are intentionally dispatched to Blazor via DispatchExceptionAsync.")]
+    private async Task HandleDataChangedAsync()
     {
         try
         {
-            await BindDataAsync(this.disposeTokenSource.Token);
+            await InvokeAsync(() => BindDataAsync(this.disposeTokenSource.Token));
         }
         catch (OperationCanceledException) when (this.disposeTokenSource.IsCancellationRequested)
         {
             // The component is disposing. Ignore cancellation from teardown.
         }
-    });
+        catch (Exception ex)
+        {
+            await DispatchExceptionAsync(ex);
+        }
+    }
 
     /// <summary>
     /// Renders an individual data item using the defined item template.
