@@ -62,6 +62,12 @@
     public bool OpenOnHover { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the dropdown closes when a pointer click occurs outside the host element.
+    /// </summary>
+    [Parameter]
+    public bool CloseOnOutsideClick { get; set; } = true;
+
+    /// <summary>
     /// Keeps the details element's open state in sync when hover-open mode is enabled.
     /// </summary>
     protected override void OnParametersSet()

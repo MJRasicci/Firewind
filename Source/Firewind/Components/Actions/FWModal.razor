@@ -5,9 +5,12 @@
     <div class="fw-modal-box">
         @ChildContent
     </div>
-    <form method="dialog" class="fw-modal-backdrop">
-        <button type="submit">Close</button>
-    </form>
+    @if (this.ShouldRenderBackdropClose)
+    {
+        <form method="dialog" class="fw-modal-backdrop">
+            <button type="submit">Close</button>
+        </form>
+    }
 </dialog>
 
 @code
@@ -35,6 +38,17 @@
     /// </summary>
     [Parameter]
     public ModalPlacement Placement { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether clicking outside the modal surface closes the dialog.
+    /// </summary>
+    [Parameter]
+    public bool CloseOnOutsideClick { get; set; } = true;
+
+    /// <summary>
+    /// Gets a value indicating whether the backdrop close form should be rendered.
+    /// </summary>
+    protected bool ShouldRenderBackdropClose => this.CloseOnOutsideClick;
 
     /// <summary>
     /// Gets the root CSS class for the modal component.
