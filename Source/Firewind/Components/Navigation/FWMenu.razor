@@ -1,63 +1,102 @@
 @namespace Firewind.Components
 @typeparam TMenuItem
-@inherits FirewindDataComponentBase<TMenuItem>
+@inherits FirewindComponentBase
 
 <ul @attributes="ComponentAttributes">
-    @foreach (var item in Items)
+    @ChildContent
+
+    @if (UseTreeRendering)
     {
-        <li>@RenderItem(item)</li>
+        @foreach (var node in TreeRootNodes)
+        {
+            @RenderTreeNode(node)
+        }
+    }
+    else
+    {
+        @foreach (var item in Items)
+        {
+            <li>@RenderFlatItem(item)</li>
+        }
     }
 </ul>
 
 @code
 {
     /// <summary>
-    /// Gets or sets the menu orientation variant.
+    /// Renders a flat data item using the configured template pipeline.
     /// </summary>
-    [Parameter]
-    public MenuOrientation Orientation { get; set; }
+    /// <param name="item">The item to render.</param>
+    /// <returns>A render fragment representing the item.</returns>
+    private RenderFragment RenderFlatItem(TMenuItem item) => (this.ItemTemplate ?? this.DefaultItemTemplate)(item);
 
     /// <summary>
-    /// Gets or sets the menu size variant.
+    /// Gets the fallback template for flat data item rendering.
     /// </summary>
-    [Parameter]
-    public MenuSize Size { get; set; }
-
-    /// <summary>
-    /// Ensures orientation classes are not counteracted by DaisyUI's default menu wrapping behavior.
-    /// </summary>
-    protected override void OnParametersSet()
+    private RenderFragment<TMenuItem> DefaultItemTemplate => (context) => (__builder) =>
     {
-        base.OnParametersSet();
+        <FWLink href="#">@context?.ToString()</FWLink>
+    };
 
-        if (this.MutableComponentAttributes.TryGetValue("style", out var styleAttribute) && styleAttribute is string styleValue)
+    /// <summary>
+    /// Renders a tree node and its descendants.
+    /// </summary>
+    /// <param name="node">The node to render.</param>
+    /// <returns>A render fragment representing the node.</returns>
+    private RenderFragment RenderTreeNode(IDataTreeNode<TMenuItem> node) => __builder =>
+    {
+        var template = this.ResolveNodeTemplate(node);
+        var hasChildren = node.Children.Count > 0;
+
+        if (this.ShouldRenderNodeAsTitle(node))
         {
-            if (styleValue.Contains("flex-wrap", StringComparison.OrdinalIgnoreCase))
+            <FWMenuTitle @key="@node.Key">
+                <ChildContent>
+                    @if (template is not null)
+                    {
+                        @template(node)
+                    }
+                    else
+                    {
+                        @this.ResolveNodeLabel(node)
+                    }
+                </ChildContent>
+            </FWMenuTitle>
+
+            foreach (var child in node.Children)
             {
-                return;
+                @RenderTreeNode(child)
             }
 
-            var normalizedStyle = styleValue.Trim().TrimEnd(';');
-            this.MutableComponentAttributes["style"] = $"{normalizedStyle}; flex-wrap: nowrap;";
             return;
         }
 
-        this.MutableComponentAttributes["style"] = "flex-wrap: nowrap;";
-    }
-
-    /// <summary>
-    /// Gets the root CSS class for the menu component.
-    /// </summary>
-    protected override string CssClass => new VariantClassBuilder("fw-menu")
-        .AddVariant(this.Orientation, static orientation => orientation.ClassNames())
-        .AddVariant(this.Size, static size => size.ClassNames())
-        .Build();
-
-    /// <summary>
-    /// Gets the fallback template used when <see cref="FirewindDataComponentBase{TDataItem}.ItemTemplate"/> is not provided.
-    /// </summary>
-    protected override RenderFragment<TMenuItem> DefaultItemTemplate => (context) => (__builder) =>
-    {
-        <FWLink href="#">@context?.ToString()</FWLink>
+        <FWMenuItem
+            @key="@node.Key"
+            As="@this.ResolveNodeActionElement(node)"
+            Href="@this.ResolveNodeHref(node)"
+            Behavior="@this.ResolveNodeBehavior(node)"
+            Collapsible="@(hasChildren && node.IsCollapsible)"
+            Open="@(hasChildren && node.IsExpanded)">
+            <ItemContent>
+                @if (template is not null)
+                {
+                    @template(node)
+                }
+                else
+                {
+                    @this.ResolveNodeLabel(node)
+                }
+            </ItemContent>
+            <ChildContent>
+                @if (hasChildren)
+                {
+                    @foreach (var child in node.Children)
+                    {
+                        @RenderTreeNode(child)
+                    }
+                }
+            </ChildContent>
+        </FWMenuItem>
     };
 }
