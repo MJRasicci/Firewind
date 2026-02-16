@@ -1,0 +1,387 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<li @attributes="ComponentAttributes">
+    @if (Collapsible)
+    {
+        <details @attributes="DetailsElementAttributes">
+            <summary class="@SummaryCssClass" @onclick="HandleClickAsync" @onclick:preventDefault="PreventDefaultOnClick">
+                @if (ItemContent is not null)
+                {
+                    @ItemContent
+                }
+                else
+                {
+                    @RenderMenuItemBody()
+                }
+            </summary>
+
+            @if (ChildContent is not null)
+            {
+                <ul class="@SubMenuCssClass">
+                    @ChildContent
+                </ul>
+            }
+        </details>
+    }
+    else
+    {
+        <DynamicElement
+            Tag="@As"
+            OnClick="HandleClickAsync"
+            PreventDefaultOnClick="@IsDisabled"
+            @attributes="ActionElementAttributes">
+            @if (ItemContent is not null)
+            {
+                @ItemContent
+            }
+            else
+            {
+                @RenderMenuItemBody()
+            }
+        </DynamicElement>
+
+        @if (ChildContent is not null)
+        {
+            <ul class="@SubMenuCssClass">
+                @ChildContent
+            </ul>
+        }
+    }
+</li>
+
+@code
+{
+    private static readonly IReadOnlyDictionary<string, object> EmptyAttributes = new Dictionary<string, object>();
+    private IReadOnlyDictionary<string, object> actionElementAttributes = EmptyAttributes;
+    private IReadOnlyDictionary<string, object> detailsElementAttributes = EmptyAttributes;
+    private bool isOpenInitialized;
+    private bool hasPreviousOpenParameter;
+    private bool previousOpenParameter;
+    private bool IsOpen { get; set; }
+
+    /// <summary>
+    /// Gets or sets the HTML element used for the menu action trigger when <see cref="Collapsible"/> is <see langword="false"/>.
+    /// </summary>
+    [Parameter]
+    public string As { get; set; } = "a";
+
+    /// <summary>
+    /// Gets or sets the href attribute used when <see cref="As"/> is an anchor element.
+    /// </summary>
+    [Parameter]
+    public string? Href { get; set; }
+
+    /// <summary>
+    /// Gets or sets behavior flags that map to DaisyUI menu modifier classes.
+    /// </summary>
+    [Parameter]
+    public MenuItemBehavior Behavior { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this item renders a collapsible submenu using a details/summary pattern.
+    /// </summary>
+    [Parameter]
+    public bool Collapsible { get; set; }
+
+    /// <summary>
+    /// Gets or sets the desired open state for collapsible submenus.
+    /// This value is used as the initial state and is reapplied only when it changes.
+    /// </summary>
+    [Parameter]
+    public bool Open { get; set; }
+
+    /// <summary>
+    /// Gets or sets the callback invoked when the effective open state changes.
+    /// </summary>
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+
+    /// <summary>
+    /// Gets or sets optional icon content displayed before the label.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? Icon { get; set; }
+
+    /// <summary>
+    /// Gets or sets the responsive visibility behavior applied to <see cref="Icon"/>.
+    /// </summary>
+    [Parameter]
+    public MenuContentVisibility IconVisibility { get; set; }
+
+    /// <summary>
+    /// Gets or sets the text label displayed for this menu item when <see cref="LabelContent"/> is not supplied.
+    /// </summary>
+    [Parameter]
+    public string? Label { get; set; }
+
+    /// <summary>
+    /// Gets or sets custom label content rendered for this menu item.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? LabelContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the responsive visibility behavior applied to the label.
+    /// </summary>
+    [Parameter]
+    public MenuContentVisibility LabelVisibility { get; set; }
+
+    /// <summary>
+    /// Gets or sets optional trailing content rendered after the label, such as badges or keyboard hints.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? EndContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets custom content for the menu action body. When supplied, this replaces icon/label rendering.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ItemContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets additional attributes applied to the trigger element (<c>summary</c> or dynamic action element).
+    /// </summary>
+    [Parameter]
+    public IReadOnlyDictionary<string, object>? ActionAttributes { get; set; }
+
+    /// <summary>
+    /// Gets or sets submenu content rendered as a nested list.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the callback invoked when the trigger element is clicked.
+    /// </summary>
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    /// <summary>
+    /// Gets trigger attributes composed from parameters and behavior flags.
+    /// </summary>
+    /// <remarks>
+    /// This is exposed for deterministic testing of generated attributes and disabled behavior.
+    /// </remarks>
+    protected IReadOnlyDictionary<string, object> ActionElementAttributes => this.actionElementAttributes;
+
+    /// <summary>
+    /// Gets details attributes composed from parameters and open state.
+    /// </summary>
+    /// <remarks>
+    /// This is exposed for deterministic testing of collapsible state behavior.
+    /// </remarks>
+    protected IReadOnlyDictionary<string, object> DetailsElementAttributes => this.detailsElementAttributes;
+
+    /// <summary>
+    /// Gets the composed submenu class string for nested lists.
+    /// </summary>
+    /// <remarks>
+    /// This is exposed for deterministic testing of dropdown class behavior.
+    /// </remarks>
+    protected string SubMenuCssClass => new VariantClassBuilder()
+        .AddIf(this.Collapsible || this.Behavior.HasFlag(MenuItemBehavior.DropdownShow), "fw-menu-dropdown")
+        .AddVariant(this.Behavior, static behavior => behavior.DropdownClassNames())
+        .Build();
+
+    /// <summary>
+    /// Gets the trigger class string used by collapsible summary elements.
+    /// </summary>
+    private string SummaryCssClass => new VariantClassBuilder(this.Behavior.ActionClassNames())
+        .AddIf(!this.Behavior.HasFlag(MenuItemBehavior.DropdownToggle), "fw-menu-dropdown-toggle")
+        .Build();
+
+    /// <summary>
+    /// Gets a value indicating whether this item is configured as disabled.
+    /// </summary>
+    private bool IsDisabled => this.Behavior.HasFlag(MenuItemBehavior.Disabled);
+
+    /// <summary>
+    /// Gets a value indicating whether native click behavior should be prevented for the trigger.
+    /// </summary>
+    /// <remarks>
+    /// Collapsible items are handled by this component, so native summary toggling is always prevented
+    /// and state transitions flow through component logic.
+    /// </remarks>
+    protected bool PreventDefaultOnClick => this.IsDisabled || this.Collapsible;
+
+    /// <summary>
+    /// Recomputes generated trigger and details attributes from current parameters.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        SyncOpenState();
+        this.actionElementAttributes = BuildActionElementAttributes();
+        this.detailsElementAttributes = BuildDetailsElementAttributes();
+    }
+
+    /// <summary>
+    /// Synchronizes internal open state from incoming parameters.
+    /// </summary>
+    private void SyncOpenState()
+    {
+        if (!this.Collapsible)
+        {
+            this.IsOpen = false;
+            this.isOpenInitialized = false;
+            this.hasPreviousOpenParameter = false;
+            return;
+        }
+
+        if (!this.isOpenInitialized)
+        {
+            this.IsOpen = this.Open;
+            this.isOpenInitialized = true;
+            this.previousOpenParameter = this.Open;
+            this.hasPreviousOpenParameter = true;
+            return;
+        }
+
+        if (this.hasPreviousOpenParameter && this.previousOpenParameter != this.Open)
+        {
+            this.IsOpen = this.Open;
+        }
+
+        this.previousOpenParameter = this.Open;
+        this.hasPreviousOpenParameter = true;
+    }
+
+    /// <summary>
+    /// Renders icon, label, and trailing content for the default menu item body.
+    /// </summary>
+    /// <returns>A render fragment containing the default item body.</returns>
+    private RenderFragment RenderMenuItemBody() => __builder =>
+    {
+        if (this.Icon is not null)
+        {
+            <span class="@this.IconVisibility.IconClassNames()">@this.Icon</span>
+        }
+
+        if (this.LabelContent is not null)
+        {
+            <span class="@this.LabelVisibility.LabelClassNames()">@this.LabelContent</span>
+        }
+        else if (!string.IsNullOrWhiteSpace(this.Label))
+        {
+            <span class="@this.LabelVisibility.LabelClassNames()">@this.Label</span>
+        }
+
+        @this.EndContent
+    };
+
+    /// <summary>
+    /// Invokes the click callback only when the item is enabled.
+    /// </summary>
+    /// <param name="args">The click event arguments.</param>
+    /// <returns>A task that represents the asynchronous callback invocation.</returns>
+    private async Task HandleClickAsync(MouseEventArgs args)
+    {
+        if (this.IsDisabled)
+        {
+            return;
+        }
+
+        if (this.Collapsible)
+        {
+            this.IsOpen = !this.IsOpen;
+            this.detailsElementAttributes = BuildDetailsElementAttributes();
+            await this.OpenChanged.InvokeAsync(this.IsOpen);
+        }
+
+        await this.OnClick.InvokeAsync(args);
+    }
+
+    /// <summary>
+    /// Builds trigger attributes for the action element, including disabled semantics.
+    /// </summary>
+    /// <returns>A read-only dictionary of trigger attributes.</returns>
+    private IReadOnlyDictionary<string, object> BuildActionElementAttributes()
+    {
+        var actionAttributes = this.ActionAttributes ?? EmptyAttributes;
+        var attributes = new Dictionary<string, object>(actionAttributes);
+
+        var cssClasses = new CssClassList(this.Behavior.ActionClassNames());
+        if (actionAttributes.TryGetValue("class", out var classAttribute) && classAttribute is string classNames)
+        {
+            cssClasses.Add(classNames);
+        }
+
+        attributes["class"] = cssClasses.ToString();
+
+        var isButtonElement = string.Equals(this.As, "button", StringComparison.OrdinalIgnoreCase);
+        var isAnchorElement = string.Equals(this.As, "a", StringComparison.OrdinalIgnoreCase);
+
+        if (isButtonElement)
+        {
+            if (!attributes.ContainsKey("type"))
+            {
+                attributes["type"] = "button";
+            }
+
+            if (this.IsDisabled)
+            {
+                attributes["disabled"] = true;
+            }
+            else
+            {
+                attributes.Remove("disabled");
+            }
+
+            attributes.Remove("aria-disabled");
+            return attributes;
+        }
+
+        attributes.Remove("disabled");
+
+        if (this.IsDisabled)
+        {
+            attributes["aria-disabled"] = "true";
+
+            if (!attributes.ContainsKey("tabindex"))
+            {
+                attributes["tabindex"] = "-1";
+            }
+        }
+        else
+        {
+            attributes.Remove("aria-disabled");
+
+            if (this.ActionAttributes is null || !this.ActionAttributes.ContainsKey("tabindex"))
+            {
+                attributes.Remove("tabindex");
+            }
+        }
+
+        if (isAnchorElement)
+        {
+            if (this.IsDisabled || string.IsNullOrWhiteSpace(this.Href))
+            {
+                attributes.Remove("href");
+            }
+            else
+            {
+                attributes["href"] = this.Href;
+            }
+        }
+
+        return attributes;
+    }
+
+    /// <summary>
+    /// Builds details attributes based on the effective internal open state.
+    /// </summary>
+    /// <returns>A read-only dictionary of details attributes.</returns>
+    private IReadOnlyDictionary<string, object> BuildDetailsElementAttributes()
+    {
+        if (!this.Collapsible || !this.IsOpen)
+        {
+            return EmptyAttributes;
+        }
+
+        return new Dictionary<string, object>
+        {
+            ["open"] = "open"
+        };
+    }
+}
