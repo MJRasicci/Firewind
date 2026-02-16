@@ -63,10 +63,27 @@ internal sealed class SourceCodeFormatter
 
         if (TryExtractPreContent(html, out var content))
         {
-            return content;
+            return NormalizeLeadingNewLines(sourceCode, content);
         }
 
         return WebUtility.HtmlEncode(sourceCode);
+    }
+
+    /// <summary>
+    /// Removes formatter-introduced leading newline boundaries while preserving caller-provided leading blank lines.
+    /// </summary>
+    /// <param name="sourceCode">The original source code text.</param>
+    /// <param name="highlightedContent">The highlighted HTML content extracted from the formatter output.</param>
+    /// <returns>Normalized highlighted content with synthetic leading newlines removed.</returns>
+    private static string NormalizeLeadingNewLines(string sourceCode, string highlightedContent)
+    {
+        var expectedLeadingNewLines = CountLeadingNewLines(sourceCode);
+        var actualLeadingNewLines = CountLeadingNewLines(highlightedContent);
+        var syntheticLeadingNewLines = actualLeadingNewLines - expectedLeadingNewLines;
+
+        return syntheticLeadingNewLines > 0
+            ? TrimLeadingNewLines(highlightedContent, syntheticLeadingNewLines)
+            : highlightedContent;
     }
 
     /// <summary>
@@ -280,6 +297,54 @@ internal sealed class SourceCodeFormatter
 
         newlineLength = 0;
         return false;
+    }
+
+    /// <summary>
+    /// Counts newline boundaries at the beginning of the provided text.
+    /// </summary>
+    /// <param name="value">The text to inspect.</param>
+    /// <returns>The number of leading newline boundaries.</returns>
+    private static int CountLeadingNewLines(string value)
+    {
+        var count = 0;
+
+        for (var index = 0; index < value.Length;)
+        {
+            if (!TryReadNewLine(value, index, out var newlineLength))
+            {
+                break;
+            }
+
+            count++;
+            index += newlineLength;
+        }
+
+        return count;
+    }
+
+    /// <summary>
+    /// Removes the specified number of leading newline boundaries from text.
+    /// </summary>
+    /// <param name="value">The text to trim.</param>
+    /// <param name="newLineCount">The number of leading newline boundaries to remove.</param>
+    /// <returns>The trimmed text.</returns>
+    private static string TrimLeadingNewLines(string value, int newLineCount)
+    {
+        var index = 0;
+        var removedCount = 0;
+
+        while (index < value.Length && removedCount < newLineCount)
+        {
+            if (!TryReadNewLine(value, index, out var newlineLength))
+            {
+                break;
+            }
+
+            index += newlineLength;
+            removedCount++;
+        }
+
+        return value[index..];
     }
 
     /// <summary>
