@@ -5,19 +5,85 @@
 @plugin "@tailwindcss/aspect-ratio";
 
 @plugin "./tailwind-scrollbar.mjs" {
-	nocompatible: true;
+  nocompatible: true;
 }
 
 @plugin "./daisyui.mjs" {
-	themes: all;
-	root: ":root";
-	prefix: "fw-";
-	logs: true;
+  themes: all;
+  root: ":root";
+  prefix: "fw-";
+  logs: true;
 }
 
-/*
-@plugin "./daisyui-theme.mjs";
-*/
+@plugin "./daisyui-theme.mjs" {
+  name: "firewind-light";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: oklch(100% 0 0);
+  --color-base-200: oklch(97.466% 0.011 259.822);
+  --color-base-300: oklch(93.268% 0.016 262.751);
+  --color-base-content: oklch(41.886% 0.053 255.824);
+  --color-primary: oklch(78% 0.154 211.53);
+  --color-primary-content: oklch(30% 0.056 229.695);
+  --color-secondary: oklch(70% 0.14 182.503);
+  --color-secondary-content: oklch(27% 0.046 192.524);
+  --color-accent: oklch(70% 0.191 22.216);
+  --color-accent-content: oklch(25% 0.092 26.042);
+  --color-neutral: oklch(37% 0.034 259.733);
+  --color-neutral-content: oklch(98% 0.002 247.839);
+  --color-info: oklch(62% 0.214 259.815);
+  --color-info-content: oklch(28% 0.091 267.935);
+  --color-success: oklch(79% 0.209 151.711);
+  --color-success-content: oklch(26% 0.065 152.934);
+  --color-warning: oklch(75% 0.183 55.934);
+  --color-warning-content: oklch(26% 0.079 36.259);
+  --color-error: oklch(64% 0.246 16.439);
+  --color-error-content: oklch(27% 0.105 12.094);
+  --radius-selector: 0.25rem;
+  --radius-field: 1rem;
+  --radius-box: 0.25rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1.5px;
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin "./daisyui-theme.mjs" {
+  name: "firewind-dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: oklch(13% 0.028 261.692);
+  --color-base-200: oklch(21% 0.034 264.665);
+  --color-base-300: oklch(27% 0.033 256.848);
+  --color-base-content: oklch(96% 0.003 264.542);
+  --color-primary: oklch(78% 0.154 211.53);
+  --color-primary-content: oklch(30% 0.056 229.695);
+  --color-secondary: oklch(70% 0.14 182.503);
+  --color-secondary-content: oklch(27% 0.046 192.524);
+  --color-accent: oklch(70% 0.191 22.216);
+  --color-accent-content: oklch(25% 0.092 26.042);
+  --color-neutral: oklch(37% 0.034 259.733);
+  --color-neutral-content: oklch(98% 0.002 247.839);
+  --color-info: oklch(62% 0.214 259.815);
+  --color-info-content: oklch(28% 0.091 267.935);
+  --color-success: oklch(79% 0.209 151.711);
+  --color-success-content: oklch(26% 0.065 152.934);
+  --color-warning: oklch(75% 0.183 55.934);
+  --color-warning-content: oklch(26% 0.079 36.259);
+  --color-error: oklch(64% 0.246 16.439);
+  --color-error-content: oklch(27% 0.105 12.094);
+  --radius-selector: 0.25rem;
+  --radius-field: 1rem;
+  --radius-box: 0.25rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1.5px;
+  --depth: 1;
+  --noise: 0;
+}
 
 @source "../wwwroot/index.html";
 @source "../Components/";
@@ -25,28 +91,28 @@
 @source "../../Firewind/Variant/";
 
 @layer base {
-	:root .prose {
-		--tw-prose-body: var(--fallback-bc,oklch(var(--bc)/.8));
-		--tw-prose-headings: var(--fallback-bc,oklch(var(--bc)/1));
-		--tw-prose-lead: var(--fallback-bc,oklch(var(--bc)/1));
-		--tw-prose-links: var(--fallback-bc,oklch(var(--bc)/1));
-		--tw-prose-bold: var(--fallback-bc,oklch(var(--bc)/1));
-		--tw-prose-counters: var(--fallback-bc,oklch(var(--bc)/1));
-		--tw-prose-bullets: var(--fallback-bc,oklch(var(--bc)/.5));
-		--tw-prose-hr: var(--fallback-bc,oklch(var(--bc)/.2));
-		--tw-prose-quotes: var(--fallback-bc,oklch(var(--bc)/1));
-		--tw-prose-quote-borders: var(--fallback-bc,oklch(var(--bc)/.2));
-		--tw-prose-captions: var(--fallback-bc,oklch(var(--bc)/.5));
-		--tw-prose-code: var(--fallback-bc,oklch(var(--bc)/1));
-		--tw-prose-pre-code: var(--fallback-nc,oklch(var(--nc)/1));
-		--tw-prose-pre-bg: var(--fallback-n,oklch(var(--n)/1));
-		--tw-prose-th-borders: var(--fallback-bc,oklch(var(--bc)/.5));
-		--tw-prose-td-borders: var(--fallback-bc,oklch(var(--bc)/.2));
-	}
+  :root .prose {
+    --tw-prose-body: var(--fallback-bc, oklch(var(--bc)/.8));
+    --tw-prose-headings: var(--fallback-bc, oklch(var(--bc)/1));
+    --tw-prose-lead: var(--fallback-bc, oklch(var(--bc)/1));
+    --tw-prose-links: var(--fallback-bc, oklch(var(--bc)/1));
+    --tw-prose-bold: var(--fallback-bc, oklch(var(--bc)/1));
+    --tw-prose-counters: var(--fallback-bc, oklch(var(--bc)/1));
+    --tw-prose-bullets: var(--fallback-bc, oklch(var(--bc)/.5));
+    --tw-prose-hr: var(--fallback-bc, oklch(var(--bc)/.2));
+    --tw-prose-quotes: var(--fallback-bc, oklch(var(--bc)/1));
+    --tw-prose-quote-borders: var(--fallback-bc, oklch(var(--bc)/.2));
+    --tw-prose-captions: var(--fallback-bc, oklch(var(--bc)/.5));
+    --tw-prose-code: var(--fallback-bc, oklch(var(--bc)/1));
+    --tw-prose-pre-code: var(--fallback-nc, oklch(var(--nc)/1));
+    --tw-prose-pre-bg: var(--fallback-n, oklch(var(--n)/1));
+    --tw-prose-th-borders: var(--fallback-bc, oklch(var(--bc)/.5));
+    --tw-prose-td-borders: var(--fallback-bc, oklch(var(--bc)/.2));
+  }
 }
 
 @layer utilities {
-	.fw-scrollable {
-		@apply overflow-auto scrollbar scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary scrollbar-track-neutral;
-	}
+  .fw-scrollable {
+    @apply overflow-auto scrollbar scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary scrollbar-track-neutral;
+  }
 }
