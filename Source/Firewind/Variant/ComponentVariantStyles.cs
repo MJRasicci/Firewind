@@ -120,6 +120,85 @@ public enum MenuSize
 }
 
 /// <summary>
+/// Represents behavior modifiers for menu actions and dropdowns.
+/// </summary>
+[Flags]
+public enum MenuItemBehavior
+{
+    /// <summary>
+    /// Applies no behavior modifiers.
+    /// </summary>
+    None = 0,
+    /// <summary>
+    /// Marks an item as the active selection.
+    /// </summary>
+    Active = 1,
+    /// <summary>
+    /// Applies focused-item styling.
+    /// </summary>
+    Focus = 2,
+    /// <summary>
+    /// Marks an item as disabled and non-interactive.
+    /// </summary>
+    Disabled = 4,
+    /// <summary>
+    /// Marks an item trigger as a dropdown toggle.
+    /// </summary>
+    DropdownToggle = 8,
+    /// <summary>
+    /// Forces a dropdown submenu to be shown.
+    /// </summary>
+    DropdownShow = 16
+}
+
+/// <summary>
+/// Represents responsive visibility options for menu icon and label content.
+/// </summary>
+public enum MenuContentVisibility
+{
+    /// <summary>
+    /// Keeps content visible at all breakpoints.
+    /// </summary>
+    Always,
+    /// <summary>
+    /// Hides content at all breakpoints.
+    /// </summary>
+    Hidden,
+    /// <summary>
+    /// Hides content until the small breakpoint.
+    /// </summary>
+    VisibleFromSmall,
+    /// <summary>
+    /// Hides content until the medium breakpoint.
+    /// </summary>
+    VisibleFromMedium,
+    /// <summary>
+    /// Hides content until the large breakpoint.
+    /// </summary>
+    VisibleFromLarge,
+    /// <summary>
+    /// Hides content until the extra-large breakpoint.
+    /// </summary>
+    VisibleFromExtraLarge,
+    /// <summary>
+    /// Hides content starting at the small breakpoint.
+    /// </summary>
+    HiddenFromSmall,
+    /// <summary>
+    /// Hides content starting at the medium breakpoint.
+    /// </summary>
+    HiddenFromMedium,
+    /// <summary>
+    /// Hides content starting at the large breakpoint.
+    /// </summary>
+    HiddenFromLarge,
+    /// <summary>
+    /// Hides content starting at the extra-large breakpoint.
+    /// </summary>
+    HiddenFromExtraLarge
+}
+
+/// <summary>
 /// Resolves CSS classes for menu variants.
 /// </summary>
 public static class MenuStyleExtensions
@@ -147,6 +226,65 @@ public static class MenuStyleExtensions
         MenuSize.Medium => "fw-menu-md",
         MenuSize.Large => "fw-menu-lg",
         MenuSize.ExtraLarge => "fw-menu-xl",
+        _ => string.Empty
+    };
+
+    /// <summary>
+    /// Gets CSS classes for menu item action behavior modifiers.
+    /// </summary>
+    /// <param name="behavior">The behavior flag set to resolve.</param>
+    /// <returns>A CSS class string for the selected behavior flags.</returns>
+    public static string ActionClassNames(this MenuItemBehavior behavior) => new VariantClassBuilder()
+        .AddIf(behavior.HasFlag(MenuItemBehavior.Active), "fw-menu-active")
+        .AddIf(behavior.HasFlag(MenuItemBehavior.Focus), "fw-menu-focus")
+        .AddIf(behavior.HasFlag(MenuItemBehavior.Disabled), "fw-menu-disabled")
+        .AddIf(behavior.HasFlag(MenuItemBehavior.DropdownToggle), "fw-menu-dropdown-toggle")
+        .Build();
+
+    /// <summary>
+    /// Gets CSS classes for dropdown visibility behavior.
+    /// </summary>
+    /// <param name="behavior">The behavior flag set to resolve.</param>
+    /// <returns>A CSS class string for submenu visibility behavior.</returns>
+    public static string DropdownClassNames(this MenuItemBehavior behavior) => behavior.HasFlag(MenuItemBehavior.DropdownShow)
+        ? "fw-menu-dropdown-show"
+        : string.Empty;
+
+    /// <summary>
+    /// Gets CSS classes for responsive menu label visibility.
+    /// </summary>
+    /// <param name="visibility">The visibility option to resolve.</param>
+    /// <returns>A CSS class string for label visibility behavior.</returns>
+    public static string LabelClassNames(this MenuContentVisibility visibility) => visibility switch
+    {
+        MenuContentVisibility.Hidden => "hidden",
+        MenuContentVisibility.VisibleFromSmall => "hidden sm:inline",
+        MenuContentVisibility.VisibleFromMedium => "hidden md:inline",
+        MenuContentVisibility.VisibleFromLarge => "hidden lg:inline",
+        MenuContentVisibility.VisibleFromExtraLarge => "hidden xl:inline",
+        MenuContentVisibility.HiddenFromSmall => "sm:hidden",
+        MenuContentVisibility.HiddenFromMedium => "md:hidden",
+        MenuContentVisibility.HiddenFromLarge => "lg:hidden",
+        MenuContentVisibility.HiddenFromExtraLarge => "xl:hidden",
+        _ => string.Empty
+    };
+
+    /// <summary>
+    /// Gets CSS classes for responsive menu icon visibility.
+    /// </summary>
+    /// <param name="visibility">The visibility option to resolve.</param>
+    /// <returns>A CSS class string for icon visibility behavior.</returns>
+    public static string IconClassNames(this MenuContentVisibility visibility) => visibility switch
+    {
+        MenuContentVisibility.Hidden => "hidden",
+        MenuContentVisibility.VisibleFromSmall => "hidden sm:inline-flex",
+        MenuContentVisibility.VisibleFromMedium => "hidden md:inline-flex",
+        MenuContentVisibility.VisibleFromLarge => "hidden lg:inline-flex",
+        MenuContentVisibility.VisibleFromExtraLarge => "hidden xl:inline-flex",
+        MenuContentVisibility.HiddenFromSmall => "sm:hidden",
+        MenuContentVisibility.HiddenFromMedium => "md:hidden",
+        MenuContentVisibility.HiddenFromLarge => "lg:hidden",
+        MenuContentVisibility.HiddenFromExtraLarge => "xl:hidden",
         _ => string.Empty
     };
 }
