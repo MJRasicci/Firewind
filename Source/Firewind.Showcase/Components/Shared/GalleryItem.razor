@@ -24,20 +24,39 @@
     [Parameter] public required string Article { get; set; }
     [Parameter] public required Type Demo { get; set; }
 
+    private string? LoadedDemoIdentity { get; set; }
     private string DemoSource { get; set; } = string.Empty;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        try
+        var demoIdentity = this.Demo.FullName ?? this.Demo.Name;
+        if (string.Equals(this.LoadedDemoIdentity, demoIdentity, StringComparison.Ordinal))
         {
-            DemoSource = await Http.GetStringAsync($"demos/sources/{Demo.Name}.razor.txt");
-        }
-        catch (Exception ex)
-        {
-            // Handle exceptions (e.g., file not found)
-            DemoSource = $"Error loading source code: {ex.Message}";
+            await base.OnParametersSetAsync();
+            return;
         }
 
-        await base.OnInitializedAsync();
+        this.LoadedDemoIdentity = demoIdentity;
+        this.DemoSource = await LoadDemoSourceAsync(this.Demo.Name);
+        await base.OnParametersSetAsync();
+    }
+
+    /// <summary>
+    /// Loads demo source text from the showcase static source manifest.
+    /// </summary>
+    /// <param name="demoName">The demo component type name.</param>
+    /// <returns>The source file contents or a precise error message.</returns>
+    private async Task<string> LoadDemoSourceAsync(string demoName)
+    {
+        var sourcePath = $"demos/sources/{demoName}.razor.txt";
+
+        try
+        {
+            return await this.Http.GetStringAsync(sourcePath);
+        }
+        catch (HttpRequestException ex)
+        {
+            return $"Error loading source code from '{sourcePath}': {ex.Message}";
+        }
     }
 }
