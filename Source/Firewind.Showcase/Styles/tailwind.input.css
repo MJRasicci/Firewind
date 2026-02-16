@@ -19,6 +19,7 @@
 @plugin "./daisyui-theme.mjs";
 */
 
+@source "../wwwroot/index.html";
 @source "../Components/";
 @source "../../Firewind/Components/";
 @source "../../Firewind/Variant/";
