@@ -5,8 +5,8 @@
     <p>@Article</p>
 </article>
 
-<FWJoin class="my-4 w-full xl:w-5/6 mx-auto flex flex-col xl:flex-row">
-    <div class="fw-join-item flex-1 pb-2 lg:pb-0 lg:pr-2 overflow-hidden">
+<div class="my-4 w-full xl:w-5/6 mx-auto flex flex-col xl:flex-row">
+    <div class="flex-1 pb-2 lg:pb-0 lg:pr-2 overflow-hidden">
         <FWBrowserMockup Address="@($"https://example.com/demos/{Demo.Name}")" class="h-120">
             <div class="flex min-h-full w-full flex-col items-center justify-start">
                 <DynamicComponent Type="Demo" />
@@ -14,10 +14,10 @@
         </FWBrowserMockup>
     </div>
 
-    <div class="fw-join-item flex-1 pt-2 lg:pt-0 lg:pl-2 overflow-hidden">
+    <div class="flex-1 pt-2 xl:pt-0 xl:pl-2 overflow-hidden">
         <FWCodeView SourceCode="@DemoSource" Language="csharp" class="h-120" />
     </div>
-</FWJoin>
+</div>
 
 @code {
     [Parameter] public required string Title { get; set; }
