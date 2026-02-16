@@ -1,18 +1,101 @@
-<div class="my-2 w-52 h-full border fw-scrollable">
-    <FWMenu DataSource="menuData" Orientation="MenuOrientation.Vertical" Size="MenuSize.Small">
-        <ItemTemplate>
-            <a @onclick="() => MenuItemClicked(context)">@context?.ToString()</a>
-        </ItemTemplate>
-    </FWMenu>
-</div>
+<div class="grid w-full gap-6 px-2 md:grid-cols-3">
+    <div class="space-y-3">
+        <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/70">Dynamic (Flat)</h3>
+        <div class="h-full w-52 border fw-scrollable rounded-box bg-base-100 p-2">
+            <FWMenu DataSource="menuData" Orientation="MenuOrientation.Vertical" Size="MenuSize.Small">
+                <ItemTemplate>
+                    <FWMenuItem Label="@context" IconVisibility="MenuContentVisibility.VisibleFromMedium">
+                        <Icon>
+                            <span class="inline-block h-2 w-2 rounded-full bg-primary"></span>
+                        </Icon>
+                    </FWMenuItem>
+                </ItemTemplate>
+            </FWMenu>
+        </div>
+        <FWButton OnClick="TestButtonClicked">Add Menu Item</FWButton>
+    </div>
 
-<div class="mx-auto mt-auto pb-2">
-    <FWButton OnClick="TestButtonClicked">Add Menu Item</FWButton>
+    <div class="space-y-3">
+        <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/70">Dynamic (Tree)</h3>
+        <FWMenu
+            DataSource="workspaceMenuData"
+            DataTreeFactory="WorkspaceTreeBuilder.Build"
+            Color="ThemeColor.Base200"
+            Size="MenuSize.Small"
+            class="w-full max-w-xs rounded-box p-2">
+            <TreeHeaderTemplate Context="node">
+                <span class="text-xs font-semibold uppercase tracking-wide text-base-content/60">
+                    @node.DataItem?.Label
+                </span>
+            </TreeHeaderTemplate>
+            <TreeBranchTemplate Context="node">
+                <span class="inline-flex items-center gap-2">
+                    <span>@node.DataItem?.Label</span>
+                    <span class="fw-badge fw-badge-xs fw-badge-primary">@node.Children.Count</span>
+                </span>
+            </TreeBranchTemplate>
+            <TreeLeafTemplate Context="node">
+                <span>@node.DataItem?.Label</span>
+            </TreeLeafTemplate>
+        </FWMenu>
+    </div>
+
+    <div class="space-y-3">
+        <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/70">Static</h3>
+        <FWMenu TMenuItem="string" Color="ThemeColor.Base200" Size="MenuSize.Small" class="w-full max-w-xs rounded-box p-2">
+            <FWMenuTitle Label="Workspace" />
+
+            <FWMenuItem Label="Dashboard" Behavior="MenuItemBehavior.Active" LabelVisibility="MenuContentVisibility.VisibleFromSmall">
+                <Icon>
+                    <span class="inline-block h-2 w-2 rounded-full bg-success"></span>
+                </Icon>
+            </FWMenuItem>
+
+            <FWMenuItem Label="Projects" Collapsible="true" Open="true" LabelVisibility="MenuContentVisibility.VisibleFromSmall">
+                <Icon>
+                    <span class="inline-block h-2 w-2 rounded-full bg-secondary"></span>
+                </Icon>
+
+                <ChildContent>
+                    <FWMenuItem Label="Firewind" />
+                    <FWMenuItem Label="Showcase" />
+                    <FWMenuItem Label="Client App">
+                        <EndContent>
+                            <span class="fw-badge fw-badge-xs fw-badge-primary">3</span>
+                        </EndContent>
+                    </FWMenuItem>
+                </ChildContent>
+            </FWMenuItem>
+
+            <FWMenuItem Label="Usage Reports" LabelVisibility="MenuContentVisibility.VisibleFromMedium">
+                <Icon>
+                    <span class="inline-block h-2 w-2 rounded-full bg-accent"></span>
+                </Icon>
+            </FWMenuItem>
+
+            <FWMenuItem Label="Billing" Behavior="MenuItemBehavior.Disabled" LabelVisibility="MenuContentVisibility.VisibleFromSmall">
+                <Icon>
+                    <span class="inline-block h-2 w-2 rounded-full bg-error"></span>
+                </Icon>
+            </FWMenuItem>
+        </FWMenu>
+    </div>
 </div>
 
 @code {
     private int count = 3;
     private IDataSource<string> menuData = null!;
+    private IDataSource<WorkspaceNode> workspaceMenuData = null!;
+
+    private static readonly DataTreeBuilder<WorkspaceNode, string> WorkspaceTreeBuilder = DataTree
+        .FromFlat<WorkspaceNode, string>(static item => item.Key, static item => item.ParentKey)
+        .WithNodeKind(static item => item.IsHeader ? DataTreeNodeKind.Header : DataTreeNodeKind.Item)
+        .WithCollapsible(static item => item.CanCollapse)
+        .WithExpanded(static item => item.IsExpanded)
+        .WithMetadata(MenuTreeMetadataKeys.Label, static item => item.Label)
+        .WithMetadata(MenuTreeMetadataKeys.Href, static item => item.Href)
+        .WithMetadata(MenuTreeMetadataKeys.Behavior, static item => item.Behavior);
+
     protected override Task OnInitializedAsync()
     {
         menuData = new InMemoryDataSource<string>(new[]
@@ -21,6 +104,14 @@
             "Item 2",
             "Item 3"
         });
+        workspaceMenuData = new InMemoryDataSource<WorkspaceNode>([
+            new WorkspaceNode("workspace", null, "Workspace", IsHeader: true),
+            new WorkspaceNode("dashboard", "workspace", "Dashboard", Href: "#", Behavior: MenuItemBehavior.Active),
+            new WorkspaceNode("projects", "workspace", "Projects", CanCollapse: true, IsExpanded: true),
+            new WorkspaceNode("firewind", "projects", "Firewind", Href: "#"),
+            new WorkspaceNode("showcase", "projects", "Showcase", Href: "#"),
+            new WorkspaceNode("billing", "workspace", "Billing", Href: "#", Behavior: MenuItemBehavior.Disabled)
+        ]);
 
         return base.OnInitializedAsync();
     }
@@ -30,8 +121,13 @@
         await menuData.AddItemAsync($"Item {++count}");
     }
 
-    private async Task MenuItemClicked(string item)
-    {
-        await menuData.RemoveItemAsync(item);
-    }
+    private sealed record WorkspaceNode(
+        string Key,
+        string? ParentKey,
+        string Label,
+        bool IsHeader = false,
+        bool? CanCollapse = null,
+        bool IsExpanded = false,
+        string? Href = null,
+        MenuItemBehavior Behavior = MenuItemBehavior.None);
 }
