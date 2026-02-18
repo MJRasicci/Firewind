@@ -11,6 +11,8 @@
   <ItemGroup>
 	  <PackageReference Include="ColorCode.Core" />
 	  <PackageReference Include="ColorCode.HTML" />
+    <PackageReference Include="HtmlSanitizer" />
+    <PackageReference Include="Markdig" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
   </ItemGroup>
 

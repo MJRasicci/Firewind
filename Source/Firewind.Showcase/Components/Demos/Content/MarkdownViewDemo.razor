@@ -1,0 +1,58 @@
+@using Firewind.Components
+
+<div class="grid w-full gap-6 px-2 lg:grid-cols-2">
+    <div class="space-y-3">
+        <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/70">Basic Markdown</h3>
+        <FWMarkdownView Markdown="@BasicMarkdown" class="rounded-box border border-base-300 bg-base-100 p-4" />
+    </div>
+
+    <div class="space-y-3">
+        <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/70">Advanced Markdown (Tables + Task List)</h3>
+        <FWMarkdownView Markdown="@AdvancedMarkdown" PipelinePreset="MarkdownPipelinePreset.Advanced" class="rounded-box border border-base-300 bg-base-100 p-4" />
+    </div>
+
+    <div class="space-y-3 lg:col-span-2">
+        <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/70">HTML Handling (Sanitized)</h3>
+        <FWMarkdownView Markdown="@HtmlMarkdown"
+                        AllowHtml="true"
+                        Sanitize="true"
+                        class="rounded-box border border-base-300 bg-base-100 p-4" />
+    </div>
+</div>
+
+@code {
+    private const string BasicMarkdown =
+"""
+# FWMarkdownView
+
+Firewind now supports markdown rendering with a typography-friendly wrapper.
+
+- Built on **Markdig**
+- Optional HTML support
+- Optional sanitization via **HtmlSanitizer**
+""";
+
+    private const string AdvancedMarkdown =
+"""
+## Release Checklist
+
+| Item | Status |
+| --- | --- |
+| Docs | ✅ |
+| Tests | ✅ |
+| Demo | ✅ |
+
+- [x] Add component
+- [x] Add tests
+- [ ] Publish package
+""";
+
+    private const string HtmlMarkdown =
+"""
+<div class=\"fw-alert fw-alert-info\">Inline HTML is allowed here.</div>
+
+<script>alert('this should be removed by sanitizer')</script>
+
+Visit [Firewind](https://github.com/mjrasicci/firewind).
+""";
+}

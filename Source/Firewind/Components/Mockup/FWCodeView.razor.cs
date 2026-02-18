@@ -2,6 +2,7 @@ namespace Firewind.Components;
 
 using ColorCode;
 using Firewind.Base;
+using Firewind.Html;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
