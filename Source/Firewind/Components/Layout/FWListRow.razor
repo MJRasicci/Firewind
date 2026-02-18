@@ -1,0 +1,20 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<li @attributes="ComponentAttributes">@ChildContent</li>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating the row should wrap to next line.
+    /// </summary>
+    [Parameter] public bool Wrap { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for list row.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-list-row")
+        .AddIf(this.Wrap, "fw-list-col-wrap")
+        .Build();
+}

@@ -1,0 +1,16 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div @attributes="ComponentAttributes">@ChildContent</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public StackAlignment Alignment { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for stack layout.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-stack")
+        .AddVariant(this.Alignment, static alignment => alignment.ClassNames())
+        .Build();
+}

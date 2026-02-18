@@ -1,0 +1,16 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div @attributes="ComponentAttributes">@ChildContent</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public ToastPlacement Placement { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for toast container.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-toast")
+        .AddVariant(this.Placement, static placement => placement.ClassNames())
+        .Build();
+}

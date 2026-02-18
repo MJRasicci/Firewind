@@ -1,0 +1,4 @@
+<FWToast Placement="ToastPlacement.BottomEnd">
+    <FWAlert Color="ThemeColor.Success">Profile saved.</FWAlert>
+    <FWAlert Color="ThemeColor.Info">Background sync complete.</FWAlert>
+</FWToast>

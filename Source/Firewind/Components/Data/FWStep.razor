@@ -1,0 +1,16 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<li @attributes="ComponentAttributes">@ChildContent</li>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public ThemeColor Color { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for step item.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-step")
+        .AddVariant(this.Color, static color => color.StepClassNames())
+        .Build();
+}

@@ -1,0 +1,16 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div @attributes="ComponentAttributes">@ChildContent</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public AxisDirection Direction { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for stats container.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-stats")
+        .AddVariant(this.Direction, static direction => direction.StatsClassNames())
+        .Build();
+}

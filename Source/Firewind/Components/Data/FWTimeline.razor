@@ -1,0 +1,20 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<ul @attributes="ComponentAttributes">@ChildContent</ul>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public AxisDirection Direction { get; set; }
+    [Parameter] public bool SnapIcon { get; set; }
+    [Parameter] public bool Compact { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for timeline container.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-timeline")
+        .AddVariant(this.Direction, static direction => direction.TimelineClassNames())
+        .AddIf(this.SnapIcon, "fw-timeline-snap-icon")
+        .AddIf(this.Compact, "fw-timeline-compact")
+        .Build();
+}

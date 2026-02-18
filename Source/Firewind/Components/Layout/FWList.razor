@@ -1,0 +1,13 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<ul @attributes="ComponentAttributes">@ChildContent</ul>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for list container.
+    /// </summary>
+    protected override string CssClass => "fw-list";
+}

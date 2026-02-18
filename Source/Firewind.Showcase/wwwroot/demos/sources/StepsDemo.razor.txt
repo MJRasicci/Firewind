@@ -1,0 +1,5 @@
+<FWSteps Direction="AxisDirection.Horizontal" class="w-full">
+    <FWStep Color="ThemeColor.Primary">Register</FWStep>
+    <FWStep Color="ThemeColor.Primary">Verify email</FWStep>
+    <FWStep>Start building</FWStep>
+</FWSteps>

@@ -1,0 +1,16 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<ul @attributes="ComponentAttributes">@ChildContent</ul>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public AxisDirection Direction { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for steps container.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-steps")
+        .AddVariant(this.Direction, static direction => direction.StepsClassNames())
+        .Build();
+}

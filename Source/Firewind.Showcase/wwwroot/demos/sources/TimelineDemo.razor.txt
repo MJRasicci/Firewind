@@ -1,0 +1,12 @@
+<FWTimeline Direction="AxisDirection.Vertical" SnapIcon class="max-w-md">
+    <li>
+        <div class="fw-timeline-start">2024</div>
+        <div class="fw-timeline-middle">●</div>
+        <div class="fw-timeline-end fw-timeline-box">Firewind planning</div>
+    </li>
+    <li>
+        <div class="fw-timeline-start">2025</div>
+        <div class="fw-timeline-middle">●</div>
+        <div class="fw-timeline-end fw-timeline-box">Public release</div>
+    </li>
+</FWTimeline>
