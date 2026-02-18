@@ -1,0 +1,42 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<select @attributes="ComponentAttributes">
+    @ChildContent
+</select>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets option content rendered inside the select element.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the visual style variant.
+    /// </summary>
+    [Parameter]
+    public FieldStyle Style { get; set; }
+
+    /// <summary>
+    /// Gets or sets the semantic color variant.
+    /// </summary>
+    [Parameter]
+    public ThemeColor Color { get; set; }
+
+    /// <summary>
+    /// Gets or sets the select size variant.
+    /// </summary>
+    [Parameter]
+    public ComponentSize Size { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the configured select variants.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-select")
+        .AddVariant(this.Style, static style => style.ClassNames("select"))
+        .AddVariant(this.Color, static color => color.FormControlClassNames("select"))
+        .AddVariant(this.Size, static size => size.FormControlClassNames("select"))
+        .Build();
+}

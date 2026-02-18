@@ -1,0 +1,27 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<input type="checkbox" @attributes="ComponentAttributes" />
+
+@code
+{
+    /// <summary>
+    /// Gets or sets the semantic color variant.
+    /// </summary>
+    [Parameter]
+    public ThemeColor Color { get; set; }
+
+    /// <summary>
+    /// Gets or sets the control size variant.
+    /// </summary>
+    [Parameter]
+    public ComponentSize Size { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the configured checkbox variants.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-checkbox")
+        .AddVariant(this.Color, static color => color.FormControlClassNames("checkbox"))
+        .AddVariant(this.Size, static size => size.FormControlClassNames("checkbox"))
+        .Build();
+}

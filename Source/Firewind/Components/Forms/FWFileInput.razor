@@ -1,0 +1,34 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<input type="file" @attributes="ComponentAttributes" />
+
+@code
+{
+    /// <summary>
+    /// Gets or sets the visual style variant.
+    /// </summary>
+    [Parameter]
+    public FieldStyle Style { get; set; }
+
+    /// <summary>
+    /// Gets or sets the semantic color variant.
+    /// </summary>
+    [Parameter]
+    public ThemeColor Color { get; set; }
+
+    /// <summary>
+    /// Gets or sets the control size variant.
+    /// </summary>
+    [Parameter]
+    public ComponentSize Size { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the configured file input variants.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-file-input")
+        .AddVariant(this.Style, static style => style.ClassNames("file-input"))
+        .AddVariant(this.Color, static color => color.FormControlClassNames("file-input"))
+        .AddVariant(this.Size, static size => size.FormControlClassNames("file-input"))
+        .Build();
+}

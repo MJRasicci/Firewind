@@ -1,0 +1,46 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<textarea placeholder="@Placeholder" @attributes="ComponentAttributes">@Value</textarea>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets the textarea placeholder text.
+    /// </summary>
+    [Parameter]
+    public string? Placeholder { get; set; }
+
+    /// <summary>
+    /// Gets or sets the textarea value.
+    /// </summary>
+    [Parameter]
+    public string? Value { get; set; }
+
+    /// <summary>
+    /// Gets or sets the visual style variant.
+    /// </summary>
+    [Parameter]
+    public FieldStyle Style { get; set; }
+
+    /// <summary>
+    /// Gets or sets the semantic color variant.
+    /// </summary>
+    [Parameter]
+    public ThemeColor Color { get; set; }
+
+    /// <summary>
+    /// Gets or sets the size variant.
+    /// </summary>
+    [Parameter]
+    public ComponentSize Size { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the configured textarea variants.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-textarea")
+        .AddVariant(this.Style, static style => style.ClassNames("textarea"))
+        .AddVariant(this.Color, static color => color.FormControlClassNames("textarea"))
+        .AddVariant(this.Size, static size => size.FormControlClassNames("textarea"))
+        .Build();
+}

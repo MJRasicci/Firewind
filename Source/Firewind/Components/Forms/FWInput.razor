@@ -1,0 +1,52 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<input type="@Type" placeholder="@Placeholder" value="@Value" @attributes="ComponentAttributes" />
+
+@code
+{
+    /// <summary>
+    /// Gets or sets the input type attribute value.
+    /// </summary>
+    [Parameter]
+    public string Type { get; set; } = "text";
+
+    /// <summary>
+    /// Gets or sets the input placeholder text.
+    /// </summary>
+    [Parameter]
+    public string? Placeholder { get; set; }
+
+    /// <summary>
+    /// Gets or sets the input value attribute.
+    /// </summary>
+    [Parameter]
+    public string? Value { get; set; }
+
+    /// <summary>
+    /// Gets or sets the visual style variant.
+    /// </summary>
+    [Parameter]
+    public FieldStyle Style { get; set; }
+
+    /// <summary>
+    /// Gets or sets the semantic color variant.
+    /// </summary>
+    [Parameter]
+    public ThemeColor Color { get; set; }
+
+    /// <summary>
+    /// Gets or sets the input size variant.
+    /// </summary>
+    [Parameter]
+    public ComponentSize Size { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the configured input variants.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-input")
+        .AddVariant(this.Style, static style => style.ClassNames("input"))
+        .AddVariant(this.Color, static color => color.FormControlClassNames("input"))
+        .AddVariant(this.Size, static size => size.FormControlClassNames("input"))
+        .Build();
+}
