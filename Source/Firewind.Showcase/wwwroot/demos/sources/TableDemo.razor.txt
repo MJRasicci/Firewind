@@ -1,0 +1,21 @@
+<FWTable Zebra class="w-full">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Alex</td>
+            <td>Engineer</td>
+            <td><FWBadge Color="ThemeColor.Success">Online</FWBadge></td>
+        </tr>
+        <tr>
+            <td>Sam</td>
+            <td>Designer</td>
+            <td><FWBadge Color="ThemeColor.Warning">Away</FWBadge></td>
+        </tr>
+    </tbody>
+</FWTable>

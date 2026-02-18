@@ -1,0 +1,51 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div class="overflow-x-auto">
+    <table @attributes="ComponentAttributes">
+        @ChildContent
+    </table>
+</div>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets table content including thead/tbody/tfoot.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets table size variant.
+    /// </summary>
+    [Parameter]
+    public ComponentSize Size { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether zebra styling should be applied.
+    /// </summary>
+    [Parameter]
+    public bool Zebra { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether row pinning styling should be applied.
+    /// </summary>
+    [Parameter]
+    public bool PinRows { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether column pinning styling should be applied.
+    /// </summary>
+    [Parameter]
+    public bool PinCols { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for configured table variants.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-table")
+        .AddVariant(this.Size, static size => size.FormControlClassNames("table"))
+        .AddIf(this.Zebra, "fw-table-zebra")
+        .AddIf(this.PinRows, "fw-table-pin-rows")
+        .AddIf(this.PinCols, "fw-table-pin-cols")
+        .Build();
+}

@@ -1,0 +1,26 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div @attributes="ComponentAttributes">
+    @ChildContent
+</div>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets section content.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets horizontal alignment for this navbar section.
+    /// </summary>
+    [Parameter]
+    public HorizontalAlignment Alignment { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the navbar section.
+    /// </summary>
+    protected override string CssClass => this.Alignment.NavbarClassNames();
+}

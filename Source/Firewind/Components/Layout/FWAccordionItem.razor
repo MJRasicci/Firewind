@@ -1,0 +1,48 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div @attributes="ComponentAttributes">
+    <input type="radio" name="@Name" checked="@Checked" />
+    <div class="fw-collapse-title">@Title</div>
+    <div class="fw-collapse-content">@ChildContent</div>
+</div>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets accordion group name.
+    /// </summary>
+    [Parameter]
+    public string Name { get; set; } = "fw-accordion";
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this accordion item is initially open.
+    /// </summary>
+    [Parameter]
+    public bool Checked { get; set; }
+
+    /// <summary>
+    /// Gets or sets accordion item title.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? Title { get; set; }
+
+    /// <summary>
+    /// Gets or sets accordion body content.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets accordion trigger style.
+    /// </summary>
+    [Parameter]
+    public CollapseStyle Style { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the accordion item.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-collapse")
+        .AddVariant(this.Style, static style => style.ClassNames())
+        .Build();
+}

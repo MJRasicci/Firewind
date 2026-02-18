@@ -1,0 +1,35 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div role="tablist" @attributes="ComponentAttributes">
+    @ChildContent
+</div>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets tab items.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tabs visual style.
+    /// </summary>
+    [Parameter]
+    public TabsStyle Style { get; set; }
+
+    /// <summary>
+    /// Gets or sets tabs placement.
+    /// </summary>
+    [Parameter]
+    public TabsPlacement Placement { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the tabs container.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-tabs")
+        .AddVariant(this.Style, static style => style.ClassNames())
+        .AddVariant(this.Placement, static placement => placement.ClassNames())
+        .Build();
+}

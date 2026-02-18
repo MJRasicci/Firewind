@@ -1,0 +1,49 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div tabindex="0" @attributes="ComponentAttributes">
+    <div class="fw-collapse-title">@Title</div>
+    <div class="fw-collapse-content">@ChildContent</div>
+</div>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets collapse title content.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? Title { get; set; }
+
+    /// <summary>
+    /// Gets or sets collapse body content.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets collapse trigger style.
+    /// </summary>
+    [Parameter]
+    public CollapseStyle Style { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether collapse should be open.
+    /// </summary>
+    [Parameter]
+    public bool Open { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether collapse should be forced closed.
+    /// </summary>
+    [Parameter]
+    public bool Closed { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for configured collapse variants.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-collapse")
+        .AddVariant(this.Style, static style => style.ClassNames())
+        .AddIf(this.Open, "fw-collapse-open")
+        .AddIf(this.Closed, "fw-collapse-close")
+        .Build();
+}

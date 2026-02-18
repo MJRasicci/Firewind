@@ -1,0 +1,11 @@
+<FWNavbar class="bg-base-200 rounded-box p-2">
+    <FWNavbarSection Alignment="HorizontalAlignment.Start">
+        <FWButton Style="ButtonStyle.Ghost">Firewind</FWButton>
+    </FWNavbarSection>
+    <FWNavbarSection Alignment="HorizontalAlignment.Center">
+        <FWLink Url="#">Features</FWLink>
+    </FWNavbarSection>
+    <FWNavbarSection Alignment="HorizontalAlignment.End">
+        <FWButton Style="ButtonStyle.Primary" Size="ComponentSize.Small">Login</FWButton>
+    </FWNavbarSection>
+</FWNavbar>
