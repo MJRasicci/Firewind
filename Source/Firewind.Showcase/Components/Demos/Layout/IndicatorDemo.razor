@@ -1,0 +1,15 @@
+<div class="p-4">
+    <FWIndicator IndicatorContent="@Badge">
+        <FWButton>Inbox</FWButton>
+    </FWIndicator>
+</div>
+
+@code {
+    private RenderFragment Badge => builder =>
+    {
+        builder.OpenComponent<FWBadge>(0);
+        builder.AddAttribute(1, "Color", ThemeColor.Error);
+        builder.AddAttribute(2, "ChildContent", (RenderFragment)(badgeBuilder => badgeBuilder.AddContent(3, "9+")));
+        builder.CloseComponent();
+    };
+}

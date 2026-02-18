@@ -1,0 +1,49 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div @attributes="ComponentAttributes">
+    @ChildContent
+</div>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets card content.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the card style variant.
+    /// </summary>
+    [Parameter]
+    public CardStyle Style { get; set; }
+
+    /// <summary>
+    /// Gets or sets the card size variant.
+    /// </summary>
+    [Parameter]
+    public ComponentSize Size { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether side layout should be applied.
+    /// </summary>
+    [Parameter]
+    public bool Side { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether full-image overlay styling should be applied.
+    /// </summary>
+    [Parameter]
+    public bool ImageFull { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the configured card variants.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-card")
+        .AddVariant(this.Style, static style => style.ClassNames())
+        .AddVariant(this.Size, static size => size.CardClassNames())
+        .AddIf(this.Side, "fw-card-side")
+        .AddIf(this.ImageFull, "fw-image-full")
+        .Build();
+}

@@ -1,0 +1,42 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div @attributes="ComponentAttributes">
+    @ChildContent
+</div>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets avatar content, such as image or initials.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether online status should be shown.
+    /// </summary>
+    [Parameter]
+    public bool Online { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether offline status should be shown.
+    /// </summary>
+    [Parameter]
+    public bool Offline { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether placeholder styling should be applied.
+    /// </summary>
+    [Parameter]
+    public bool Placeholder { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for configured avatar modifiers.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-avatar")
+        .AddIf(this.Online, "fw-avatar-online")
+        .AddIf(this.Offline, "fw-avatar-offline")
+        .AddIf(this.Placeholder, "fw-avatar-placeholder")
+        .Build();
+}

@@ -1,0 +1,16 @@
+<div class="flex items-center gap-4 p-4">
+    <FWAvatar Online>
+        <div class="w-12 rounded-full">
+            <img src="https://picsum.photos/80" alt="avatar" />
+        </div>
+    </FWAvatar>
+
+    <FWAvatarGroup>
+        <FWAvatar>
+            <div class="w-10 rounded-full"><img src="https://picsum.photos/81" alt="a" /></div>
+        </FWAvatar>
+        <FWAvatar>
+            <div class="w-10 rounded-full"><img src="https://picsum.photos/82" alt="b" /></div>
+        </FWAvatar>
+    </FWAvatarGroup>
+</div>

@@ -1,0 +1,48 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div @attributes="ComponentAttributes">
+    @if (IndicatorContent is not null)
+    {
+        <span class="fw-indicator-item @IndicatorClasses">@IndicatorContent</span>
+    }
+
+    @ChildContent
+</div>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets the primary wrapped content.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets indicator content rendered at the corner.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? IndicatorContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets indicator horizontal placement.
+    /// </summary>
+    [Parameter]
+    public ElementPosition HorizontalPosition { get; set; } = ElementPosition.End;
+
+    /// <summary>
+    /// Gets or sets indicator vertical placement.
+    /// </summary>
+    [Parameter]
+    public ElementPosition VerticalPosition { get; set; } = ElementPosition.Top;
+
+    private string IndicatorClasses => new VariantClassBuilder()
+        .Add(this.HorizontalPosition == ElementPosition.Start ? "fw-indicator-start" : "fw-indicator-end")
+        .Add(this.VerticalPosition == ElementPosition.Bottom ? "fw-indicator-bottom" : "fw-indicator-top")
+        .Build();
+
+    /// <summary>
+    /// Gets CSS classes for the indicator wrapper container.
+    /// </summary>
+    protected override string CssClass => "fw-indicator";
+}

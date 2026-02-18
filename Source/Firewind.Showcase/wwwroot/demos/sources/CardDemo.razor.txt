@@ -1,0 +1,11 @@
+<div class="flex w-full max-w-md flex-col gap-4 p-4">
+    <FWCard Style="CardStyle.Border" class="bg-base-200 shadow-sm">
+        <div class="fw-card-body">
+            <h2 class="fw-card-title">Starter Card</h2>
+            <p>Use existing Firewind actions inside card content.</p>
+            <div class="fw-card-actions justify-end">
+                <FWButton Style="ButtonStyle.Primary">Ship</FWButton>
+            </div>
+        </div>
+    </FWCard>
+</div>
