@@ -1,0 +1,5 @@
+<div class="flex items-center gap-4 p-4">
+    <FWStatus />
+    <FWStatus Color="ThemeColor.Success" />
+    <FWStatus Color="ThemeColor.Warning" Size="ComponentSize.Large" />
+</div>

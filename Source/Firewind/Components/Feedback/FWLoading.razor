@@ -1,0 +1,27 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<span aria-hidden="true" @attributes="ComponentAttributes"></span>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets the loading animation style.
+    /// </summary>
+    [Parameter]
+    public LoadingStyle Style { get; set; }
+
+    /// <summary>
+    /// Gets or sets loading indicator size.
+    /// </summary>
+    [Parameter]
+    public ComponentSize Size { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the configured loading variants.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-loading")
+        .AddVariant(this.Style, static style => style.ClassNames())
+        .AddVariant(this.Size, static size => size.FormControlClassNames("loading"))
+        .Build();
+}

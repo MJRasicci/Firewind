@@ -1,0 +1,42 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div role="alert" @attributes="ComponentAttributes">
+    @ChildContent
+</div>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets alert body content.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the alert style variant.
+    /// </summary>
+    [Parameter]
+    public AlertStyle Style { get; set; }
+
+    /// <summary>
+    /// Gets or sets the alert semantic color variant.
+    /// </summary>
+    [Parameter]
+    public ThemeColor Color { get; set; }
+
+    /// <summary>
+    /// Gets or sets the alert direction variant.
+    /// </summary>
+    [Parameter]
+    public AlertDirection Direction { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the configured alert variants.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-alert")
+        .AddVariant(this.Style, static style => style.ClassNames())
+        .AddVariant(this.Color, static color => color.AlertClassNames())
+        .AddVariant(this.Direction, static direction => direction.ClassNames())
+        .Build();
+}

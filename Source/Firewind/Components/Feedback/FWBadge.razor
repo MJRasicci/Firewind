@@ -1,0 +1,61 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<span @attributes="ComponentAttributes">@ChildContent</span>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets badge content.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the badge style variant.
+    /// </summary>
+    [Parameter]
+    public FieldStyle Style { get; set; }
+
+    /// <summary>
+    /// Gets or sets the badge semantic color variant.
+    /// </summary>
+    [Parameter]
+    public ThemeColor Color { get; set; }
+
+    /// <summary>
+    /// Gets or sets the badge size variant.
+    /// </summary>
+    [Parameter]
+    public ComponentSize Size { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether outline style should be applied.
+    /// </summary>
+    [Parameter]
+    public bool Outline { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether dashed style should be applied.
+    /// </summary>
+    [Parameter]
+    public bool Dash { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether soft style should be applied.
+    /// </summary>
+    [Parameter]
+    public bool Soft { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the configured badge variants.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-badge")
+        .AddVariant(this.Style, static style => style.ClassNames("badge"))
+        .AddIf(this.Outline, "fw-badge-outline")
+        .AddIf(this.Dash, "fw-badge-dash")
+        .AddIf(this.Soft, "fw-badge-soft")
+        .AddVariant(this.Color, static color => color.FormControlClassNames("badge"))
+        .AddVariant(this.Size, static size => size.FormControlClassNames("badge"))
+        .Build();
+}

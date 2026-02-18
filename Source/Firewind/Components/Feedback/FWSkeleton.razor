@@ -1,0 +1,28 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div @attributes="ComponentAttributes">
+    @ChildContent
+</div>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets skeleton content.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether text skeleton styling should be applied.
+    /// </summary>
+    [Parameter]
+    public bool Text { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the configured skeleton variants.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-skeleton")
+        .AddIf(this.Text, "fw-skeleton-text")
+        .Build();
+}

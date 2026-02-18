@@ -1,0 +1,5 @@
+<div class="flex items-center gap-4 p-4">
+    <FWLoading />
+    <FWLoading Style="LoadingStyle.Dots" />
+    <FWLoading Style="LoadingStyle.Ring" Size="ComponentSize.Large" />
+</div>

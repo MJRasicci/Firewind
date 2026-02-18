@@ -1,0 +1,5 @@
+<div class="flex w-full max-w-md flex-col gap-4 p-4">
+    <FWProgress Value="35" />
+    <FWProgress Value="68" Color="ThemeColor.Primary" />
+    <FWProgress Value="90" Color="ThemeColor.Success" />
+</div>

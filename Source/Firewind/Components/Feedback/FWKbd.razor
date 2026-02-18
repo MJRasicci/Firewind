@@ -1,0 +1,26 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<kbd @attributes="ComponentAttributes">@ChildContent</kbd>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets keyboard key content.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets keycap size variant.
+    /// </summary>
+    [Parameter]
+    public ComponentSize Size { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the configured keycap variants.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-kbd")
+        .AddVariant(this.Size, static size => size.FormControlClassNames("kbd"))
+        .Build();
+}

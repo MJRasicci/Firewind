@@ -1,0 +1,4 @@
+<div class="flex w-full max-w-md flex-col gap-4 p-4">
+    <FWFileInput />
+    <FWFileInput Color="ThemeColor.Info" Size="ComponentSize.Small" />
+</div>

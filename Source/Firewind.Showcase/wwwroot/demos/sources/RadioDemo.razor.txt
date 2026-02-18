@@ -1,0 +1,5 @@
+<div class="flex items-center gap-4 p-4">
+    <FWRadio Name="language" />
+    <FWRadio Name="language" Color="ThemeColor.Primary" />
+    <FWRadio Name="language" Color="ThemeColor.Accent" />
+</div>

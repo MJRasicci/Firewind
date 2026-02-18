@@ -1,0 +1,5 @@
+<div class="flex items-center gap-4 p-4">
+    <FWToggle />
+    <FWToggle Color="ThemeColor.Primary" />
+    <FWToggle Color="ThemeColor.Success" Size="ComponentSize.Large" />
+</div>

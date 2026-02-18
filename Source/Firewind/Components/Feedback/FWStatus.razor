@@ -1,0 +1,27 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<span @attributes="ComponentAttributes"></span>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets the semantic status color variant.
+    /// </summary>
+    [Parameter]
+    public ThemeColor Color { get; set; }
+
+    /// <summary>
+    /// Gets or sets the status indicator size variant.
+    /// </summary>
+    [Parameter]
+    public ComponentSize Size { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the configured status variants.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-status")
+        .AddVariant(this.Color, static color => color.FormControlClassNames("status"))
+        .AddVariant(this.Size, static size => size.FormControlClassNames("status"))
+        .Build();
+}

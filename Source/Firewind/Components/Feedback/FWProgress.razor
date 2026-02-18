@@ -1,0 +1,32 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<progress value="@Value" max="@Max" @attributes="ComponentAttributes"></progress>
+
+@code
+{
+    /// <summary>
+    /// Gets or sets the current progress value.
+    /// </summary>
+    [Parameter]
+    public double Value { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum progress value.
+    /// </summary>
+    [Parameter]
+    public double Max { get; set; } = 100;
+
+    /// <summary>
+    /// Gets or sets the semantic progress color variant.
+    /// </summary>
+    [Parameter]
+    public ThemeColor Color { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the configured progress variants.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-progress")
+        .AddVariant(this.Color, static color => color.FormControlClassNames("progress"))
+        .Build();
+}

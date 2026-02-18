@@ -1,0 +1,5 @@
+<div class="flex items-center gap-4 p-4">
+    <FWCheckbox />
+    <FWCheckbox Color="ThemeColor.Success" />
+    <FWCheckbox Color="ThemeColor.Error" Size="ComponentSize.Large" />
+</div>

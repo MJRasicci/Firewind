@@ -1,0 +1,4 @@
+<div class="flex w-full max-w-xl flex-col gap-4 p-4">
+    <FWTextarea Placeholder="Write your bio" />
+    <FWTextarea Placeholder="Warning textarea" Color="ThemeColor.Warning" />
+</div>

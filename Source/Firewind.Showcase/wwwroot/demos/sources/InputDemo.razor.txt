@@ -1,0 +1,5 @@
+<div class="flex w-full max-w-xl flex-col gap-4 p-4">
+    <FWInput Placeholder="Default input" />
+    <FWInput Placeholder="Primary ghost input" Color="ThemeColor.Primary" Style="FieldStyle.Ghost" />
+    <FWInput Placeholder="Responsive size" Size="ComponentSize.Responsive" />
+</div>
