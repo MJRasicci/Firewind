@@ -14,9 +14,9 @@ public sealed class FWCodeViewTests
     /// Ensures highlighted output does not include a synthetic empty first line.
     /// </summary>
     [Fact]
-    public void FormattedSource_WhenSourceDoesNotStartWithNewLine_DoesNotRenderLeadingEmptyLine()
+    public async Task FormattedSource_WhenSourceDoesNotStartWithNewLine_DoesNotRenderLeadingEmptyLine()
     {
-        var codeView = new TestCodeView();
+        await using var codeView = new TestCodeView();
         codeView.Configure("public sealed class Demo { }", "csharp");
 
         var lines = TestCodeView.ExtractRenderedCodeLines(codeView.GetFormattedMarkup());
@@ -29,9 +29,9 @@ public sealed class FWCodeViewTests
     /// Ensures caller-provided leading blank lines are preserved.
     /// </summary>
     [Fact]
-    public void FormattedSource_WhenSourceStartsWithNewLine_PreservesSingleLeadingBlankLine()
+    public async Task FormattedSource_WhenSourceStartsWithNewLine_PreservesSingleLeadingBlankLine()
     {
-        var codeView = new TestCodeView();
+        await using var codeView = new TestCodeView();
         codeView.Configure("\npublic sealed class Demo { }", "csharp");
 
         var lines = TestCodeView.ExtractRenderedCodeLines(codeView.GetFormattedMarkup());

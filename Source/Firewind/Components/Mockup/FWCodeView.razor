@@ -1,77 +1,21 @@
 @namespace Firewind.Components
 @inherits FirewindComponentBase
-@using ColorCode
-@using System.Net
-@using System.Text
 
 <div @attributes="ComponentAttributes">
+    @if (this.ShowCopy)
+    {
+        <div class="absolute right-2 top-2 z-10">
+            <FWButton OnClick="this.CopySourceCodeAsync"
+                      Style="ButtonStyle.Neutral"
+                      Shape="ButtonShape.Square"
+                      Size="ComponentSize.Small"
+                      aria-label="Copy source code">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M19.5 16.5L19.5 4.5L18.75 3.75H9L8.25 4.5L8.25 7.5L5.25 7.5L4.5 8.25V20.25L5.25 21H15L15.75 20.25V17.25H18.75L19.5 16.5ZM15.75 15.75L15.75 8.25L15 7.5L9.75 7.5V5.25L18 5.25V15.75H15.75ZM6 9L14.25 9L14.25 19.5L6 19.5L6 9Z" fill="#080341"></path> </g></svg>
+            </FWButton>
+        </div>
+    }
+
     <div class="h-full pb-2 fw-scrollable">
-        @FormattedSource
+        @this.FormattedSource
     </div>
 </div>
-
-@code {
-    /// <summary>
-    /// Gets or sets the source code text to render.
-    /// </summary>
-    [Parameter]
-    public string SourceCode { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Gets or sets the ColorCode language identifier used for syntax highlighting.
-    /// </summary>
-    [Parameter]
-    public string Language { get; set; } = string.Empty;
-
-    private static readonly string[] LineSeparators = ["\r\n", "\n", "\r"];
-    private readonly SourceCodeFormatter formatter = new();
-
-    /// <summary>
-    /// Gets formatted markup for the configured source code and language.
-    /// </summary>
-    private MarkupString FormattedSource => this.ResolveLanguage() is ILanguage language
-        ? this.formatter.GetMarkupString(this.SourceCode, language)
-        : this.BuildPlainTextMarkup();
-
-    /// <summary>
-    /// Resolves the configured language identifier to a ColorCode language descriptor.
-    /// </summary>
-    /// <returns>
-    /// A resolved <see cref="ILanguage"/> instance, or <see langword="null"/> if the id cannot be resolved.
-    /// </returns>
-    private ILanguage? ResolveLanguage()
-    {
-        if (string.IsNullOrWhiteSpace(this.Language))
-        {
-            return Languages.CSharp;
-        }
-
-        return Languages.FindById(this.Language);
-    }
-
-    /// <summary>
-    /// Builds HTML markup that renders escaped plain text with line numbers.
-    /// </summary>
-    /// <returns>A <see cref="MarkupString"/> containing escaped code lines.</returns>
-    private MarkupString BuildPlainTextMarkup()
-    {
-        var lines = this.SourceCode.Split(LineSeparators, StringSplitOptions.None);
-        var buffer = new StringBuilder();
-
-        for (var i = 0; i < lines.Length; i++)
-        {
-            buffer.Append("<pre data-prefix=\"")
-                  .Append(i + 1)
-                  .Append("\"><code>")
-                  .Append(WebUtility.HtmlEncode(lines[i]))
-                  .Append("</code></pre>");
-        }
-
-        return new MarkupString(buffer.ToString());
-    }
-
-    /// <summary>
-    /// Gets the root CSS classes for the code view component.
-    /// </summary>
-    protected override string CssClass => "fw-mockup-code border border-base-300 pb-0 flex flex-col overflow-hidden";
-}
