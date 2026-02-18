@@ -1,21 +1,21 @@
 @inject HttpClient Http
 
-<article class="prose prose-sm md:prose-base py-4 max-w-full w-full xl:w-5/6 mx-auto">
+<article class="prose prose-sm md:prose-base mx-auto w-full max-w-6xl py-2">
     <h2>@Title</h2>
     <p>@Article</p>
 </article>
 
-<div class="my-4 w-full xl:w-5/6 mx-auto flex flex-col xl:flex-row">
-    <div class="flex-1 pb-2 lg:pb-0 lg:pr-2 overflow-hidden">
-        <FWBrowserMockup Address="@($"https://example.com/demos/{Demo.Name}")" class="h-120">
+<div class="mx-auto my-4 flex w-full max-w-6xl flex-col gap-4 2xl:grid 2xl:grid-cols-2">
+    <div class="min-w-0 overflow-hidden">
+        <FWBrowserMockup Address="@($"https://example.com/demos/{Demo.Name}")" class="h-[24rem] sm:h-[28rem] xl:h-[32rem]">
             <div class="flex min-h-full w-full flex-col items-center justify-start">
                 <DynamicComponent Type="Demo" />
             </div>
         </FWBrowserMockup>
     </div>
 
-    <div class="flex-1 pt-2 xl:pt-0 xl:pl-2 overflow-hidden">
-        <FWCodeView SourceCode="@DemoSource" Language="csharp" class="h-120" />
+    <div class="min-w-0 overflow-hidden">
+        <FWCodeView SourceCode="@DemoSource" Language="csharp" class="h-[24rem] sm:h-[28rem] xl:h-[32rem]" />
     </div>
 </div>
 

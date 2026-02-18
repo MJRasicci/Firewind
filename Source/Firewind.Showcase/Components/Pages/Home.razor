@@ -3,34 +3,38 @@
 
 <PageTitle>Home</PageTitle>
 
-<div class="w-full px-4 pb-6 lg:px-8">
-    <div class="grid gap-6 lg:grid-cols-[18rem_1fr]">
-        <aside class="rounded-box border border-base-300 bg-base-100 p-3 lg:sticky lg:top-4 lg:h-fit">
-            <h2 class="px-2 pb-2 text-sm font-semibold uppercase tracking-wide text-base-content/70">Component Demos</h2>
+<div class="w-full pb-6">
+    <div class="grid gap-6 lg:grid-cols-[minmax(16rem,20rem)_minmax(0,1fr)] lg:items-start">
+        <aside class="rounded-box border border-base-300 bg-base-100 shadow-sm lg:sticky lg:top-4 lg:flex lg:max-h-[calc(100dvh-10.5rem)] lg:flex-col">
+            <div class="border-b border-base-300 px-4 py-3">
+                <h2 class="text-sm font-semibold uppercase tracking-wide text-base-content/70">Component Demos</h2>
+            </div>
 
-            <FWMenu TMenuItem="string" Size="MenuSize.Small" class="w-full">
-                @foreach (var category in this.demoCategories)
-                {
-                    <FWMenuItem
-                        Label="@category.CategoryTitle"
-                        Collapsible="true"
-                        Open="true">
-                        <ChildContent>
-                            @foreach (var demo in category.Demos)
-                            {
-                                <FWMenuItem
-                                    As="button"
-                                    Label="@demo.Title"
-                                    Behavior="@this.GetMenuItemBehavior(demo)"
-                                    OnClick="@(_ => this.SetActiveDemo(demo.Key))" />
-                            }
-                        </ChildContent>
-                    </FWMenuItem>
-                }
-            </FWMenu>
+            <div class="min-h-0 flex-1 overflow-y-auto p-3 fw-scrollable">
+                <FWMenu TMenuItem="string" Size="MenuSize.Small" class="w-full">
+                    @foreach (var category in this.demoCategories)
+                    {
+                        <FWMenuItem
+                            Label="@category.CategoryTitle"
+                            Collapsible="true"
+                            Open="true">
+                            <ChildContent>
+                                @foreach (var demo in category.Demos)
+                                {
+                                    <FWMenuItem
+                                        As="button"
+                                        Label="@demo.Title"
+                                        Behavior="@this.GetMenuItemBehavior(demo)"
+                                        OnClick="@(_ => this.SetActiveDemo(demo.Key))" />
+                                }
+                            </ChildContent>
+                        </FWMenuItem>
+                    }
+                </FWMenu>
+            </div>
         </aside>
 
-        <section class="min-w-0">
+        <section class="min-w-0 rounded-box border border-base-300/60 bg-base-100/30 p-3 sm:p-4 lg:p-6">
             <FWMultiView ActiveKey="@this.activeDemoKey" AutoSelectFirstItem="false" class="w-full">
                 @foreach (var category in this.demoCategories)
                 {
