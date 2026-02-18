@@ -92,14 +92,14 @@ public static class ButtonStyleExtensions
     /// </returns>
     public static string ClassNames(this ButtonStyle style) => style switch
     {
-        ButtonStyle.Neutral => "fw-btn-neutral",
-        ButtonStyle.Primary => "fw-btn-primary",
-        ButtonStyle.Secondary => "fw-btn-secondary",
-        ButtonStyle.Accent => "fw-btn-accent",
-        ButtonStyle.Info => "fw-btn-info",
-        ButtonStyle.Success => "fw-btn-success",
-        ButtonStyle.Warning => "fw-btn-warning",
-        ButtonStyle.Error => "fw-btn-error",
+        ButtonStyle.Neutral => "fw-btn-neutral text-neutral-content",
+        ButtonStyle.Primary => "fw-btn-primary text-primary-content",
+        ButtonStyle.Secondary => "fw-btn-secondary text-secondary-content",
+        ButtonStyle.Accent => "fw-btn-accent text-accent-content",
+        ButtonStyle.Info => "fw-btn-info text-info-content",
+        ButtonStyle.Success => "fw-btn-success text-success-content",
+        ButtonStyle.Warning => "fw-btn-warning text-warning-content",
+        ButtonStyle.Error => "fw-btn-error text-error-content",
         ButtonStyle.Ghost => "fw-btn-ghost",
         ButtonStyle.Link => "fw-btn-link",
         _ => string.Empty
