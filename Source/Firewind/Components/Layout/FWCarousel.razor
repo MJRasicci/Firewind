@@ -1,0 +1,29 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div @attributes="ComponentAttributes">@ChildContent</div>
+
+@code {
+    /// <summary>
+    /// Gets or sets carousel item content.
+    /// </summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating carousel vertical orientation.
+    /// </summary>
+    [Parameter] public bool Vertical { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating items should align to center.
+    /// </summary>
+    [Parameter] public bool Center { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for carousel container.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-carousel")
+        .AddIf(this.Vertical, "fw-carousel-vertical")
+        .AddIf(this.Center, "fw-carousel-center")
+        .Build();
+}

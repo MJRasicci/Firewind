@@ -1,0 +1,38 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<fieldset @attributes="ComponentAttributes">
+    @if (Legend is not null)
+    {
+        <legend class="fw-fieldset-legend">@Legend</legend>
+    }
+
+    @ChildContent
+
+    @if (Description is not null)
+    {
+        <p class="fw-label">@Description</p>
+    }
+</fieldset>
+
+@code {
+    /// <summary>
+    /// Gets or sets fieldset legend content.
+    /// </summary>
+    [Parameter] public RenderFragment? Legend { get; set; }
+
+    /// <summary>
+    /// Gets or sets fieldset body content.
+    /// </summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets fieldset description content.
+    /// </summary>
+    [Parameter] public RenderFragment? Description { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for fieldset component.
+    /// </summary>
+    protected override string CssClass => "fw-fieldset";
+}

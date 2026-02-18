@@ -1,0 +1,7 @@
+<FWFieldset>
+    <Legend>Profile</Legend>
+    <ChildContent>
+        <FWInput Placeholder="Display name" />
+    </ChildContent>
+    <Description>Shown in community spaces.</Description>
+</FWFieldset>

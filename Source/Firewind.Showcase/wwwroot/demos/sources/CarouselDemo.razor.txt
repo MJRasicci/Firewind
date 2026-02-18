@@ -1,0 +1,5 @@
+<FWCarousel class="w-80 rounded-box">
+    <FWCarouselItem><img src="https://picsum.photos/320/180?1" alt="1" /></FWCarouselItem>
+    <FWCarouselItem><img src="https://picsum.photos/320/180?2" alt="2" /></FWCarouselItem>
+    <FWCarouselItem><img src="https://picsum.photos/320/180?3" alt="3" /></FWCarouselItem>
+</FWCarousel>

@@ -1,0 +1,5 @@
+<FWRating Size="ComponentSize.Large">
+    <input type="radio" name="rating-demo" class="fw-mask fw-mask-star" />
+    <input type="radio" name="rating-demo" class="fw-mask fw-mask-star" checked />
+    <input type="radio" name="rating-demo" class="fw-mask fw-mask-star" />
+</FWRating>

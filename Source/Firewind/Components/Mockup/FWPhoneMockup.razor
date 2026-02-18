@@ -1,0 +1,19 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div @attributes="ComponentAttributes">
+    <div class="fw-mockup-phone-camera"></div>
+    <div class="fw-mockup-phone-display">@ChildContent</div>
+</div>
+
+@code {
+    /// <summary>
+    /// Gets or sets mockup display content.
+    /// </summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for phone mockup.
+    /// </summary>
+    protected override string CssClass => "fw-mockup-phone";
+}

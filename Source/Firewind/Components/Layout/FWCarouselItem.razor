@@ -1,0 +1,16 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div @attributes="ComponentAttributes">@ChildContent</div>
+
+@code {
+    /// <summary>
+    /// Gets or sets item content.
+    /// </summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for carousel item.
+    /// </summary>
+    protected override string CssClass => "fw-carousel-item";
+}

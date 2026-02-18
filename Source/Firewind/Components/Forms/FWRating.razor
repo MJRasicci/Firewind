@@ -1,0 +1,29 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div @attributes="ComponentAttributes">@ChildContent</div>
+
+@code {
+    /// <summary>
+    /// Gets or sets rating option content.
+    /// </summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets rating size.
+    /// </summary>
+    [Parameter] public ComponentSize Size { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating half-rating style is enabled.
+    /// </summary>
+    [Parameter] public bool Half { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for rating container.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-rating")
+        .AddVariant(this.Size, static size => size.FormControlClassNames("rating"))
+        .AddIf(this.Half, "fw-rating-half")
+        .Build();
+}
