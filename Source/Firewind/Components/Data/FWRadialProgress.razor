@@ -1,7 +1,7 @@
 @namespace Firewind.Components
 @inherits FirewindComponentBase
 
-<div role="progressbar" aria-valuenow="@Value" style="--value:@Value;--size:@Size;--thickness:@Thickness;" @attributes="ComponentAttributes">@DisplayText</div>
+<div role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="@Value" style="--value:@Value;--size:@Size;--thickness:@Thickness;" @attributes="ComponentAttributes">@ResolvedDisplayText</div>
 
 @code {
     /// <summary>
@@ -30,11 +30,17 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        this.DisplayText ??= $"{this.Value}%";
+
+        if (this.Value is < 0 or > 100)
+        {
+            throw new ArgumentOutOfRangeException(nameof(Value), this.Value, "Radial progress value must be between 0 and 100.");
+        }
     }
 
     /// <summary>
     /// Gets CSS classes for radial progress component.
     /// </summary>
     protected override string CssClass => "fw-radial-progress";
+
+    private string ResolvedDisplayText => this.DisplayText ?? $"{this.Value}%";
 }

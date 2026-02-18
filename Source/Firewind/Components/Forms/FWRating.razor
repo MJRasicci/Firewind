@@ -20,10 +20,16 @@
     [Parameter] public bool Half { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating hidden rating option styling is enabled.
+    /// </summary>
+    [Parameter] public bool Hidden { get; set; }
+
+    /// <summary>
     /// Gets CSS classes for rating container.
     /// </summary>
     protected override string CssClass => new VariantClassBuilder("fw-rating")
         .AddVariant(this.Size, static size => size.FormControlClassNames("rating"))
         .AddIf(this.Half, "fw-rating-half")
+        .AddIf(this.Hidden, "fw-rating-hidden")
         .Build();
 }

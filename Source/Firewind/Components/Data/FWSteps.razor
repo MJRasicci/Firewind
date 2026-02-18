@@ -5,7 +5,7 @@
 
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public AxisDirection Direction { get; set; }
+    [Parameter] public AxisDirection Direction { get; set; } = AxisDirection.Horizontal;
 
     /// <summary>
     /// Gets CSS classes for steps container.

@@ -39,6 +39,19 @@
     public bool Closed { get; set; }
 
     /// <summary>
+    /// Validates mutually exclusive open/close modifiers.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (this.Open && this.Closed)
+        {
+            throw new InvalidOperationException("Collapse cannot be open and closed at the same time.");
+        }
+    }
+
+    /// <summary>
     /// Gets CSS classes for configured collapse variants.
     /// </summary>
     protected override string CssClass => new VariantClassBuilder("fw-collapse")

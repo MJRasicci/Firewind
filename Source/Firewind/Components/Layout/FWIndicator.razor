@@ -37,12 +37,28 @@
     public ElementPosition VerticalPosition { get; set; } = ElementPosition.Top;
 
     private string IndicatorClasses => new VariantClassBuilder()
-        .Add(this.HorizontalPosition == ElementPosition.Start ? "fw-indicator-start" : "fw-indicator-end")
-        .Add(this.VerticalPosition == ElementPosition.Bottom ? "fw-indicator-bottom" : "fw-indicator-top")
+        .Add(ResolveHorizontalClass(this.HorizontalPosition))
+        .Add(ResolveVerticalClass(this.VerticalPosition))
         .Build();
 
     /// <summary>
     /// Gets CSS classes for the indicator wrapper container.
     /// </summary>
     protected override string CssClass => "fw-indicator";
+
+    private static string ResolveHorizontalClass(ElementPosition position) => position switch
+    {
+        ElementPosition.Start => "fw-indicator-start",
+        ElementPosition.Left => "fw-indicator-start",
+        ElementPosition.End => "fw-indicator-end",
+        ElementPosition.Right => "fw-indicator-end",
+        _ => "fw-indicator-center"
+    };
+
+    private static string ResolveVerticalClass(ElementPosition position) => position switch
+    {
+        ElementPosition.Top => "fw-indicator-top",
+        ElementPosition.Bottom => "fw-indicator-bottom",
+        _ => "fw-indicator-middle"
+    };
 }

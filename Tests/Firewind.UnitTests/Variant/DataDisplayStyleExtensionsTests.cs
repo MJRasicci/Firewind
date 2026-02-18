@@ -26,6 +26,14 @@ public sealed class DataDisplayStyleExtensionsTests
     }
 
     [Theory]
+    [InlineData(AxisDirection.Vertical, "fw-steps-vertical")]
+    [InlineData(AxisDirection.Horizontal, "fw-steps-horizontal")]
+    public void StepsClassNames_ReturnsExpectedMappings(AxisDirection direction, string expected)
+    {
+        direction.StepsClassNames().Should().Be(expected);
+    }
+
+    [Theory]
     [InlineData(StackAlignment.Default, "")]
     [InlineData(StackAlignment.Top, "fw-stack-top")]
     [InlineData(StackAlignment.Bottom, "fw-stack-bottom")]
@@ -41,5 +49,13 @@ public sealed class DataDisplayStyleExtensionsTests
     public void StepClassNames_ReturnsExpectedMappings(ThemeColor color, string expected)
     {
         color.StepClassNames().Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData(AxisDirection.Horizontal, "fw-stats-horizontal")]
+    [InlineData(AxisDirection.Vertical, "fw-stats-vertical")]
+    public void StatsClassNames_ReturnsExpectedMappings(AxisDirection direction, string expected)
+    {
+        direction.StatsClassNames().Should().Be(expected);
     }
 }

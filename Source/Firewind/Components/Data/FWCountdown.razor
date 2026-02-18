@@ -12,6 +12,19 @@
     [Parameter] public int Value { get; set; }
 
     /// <summary>
+    /// Validates countdown input range before rendering.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (this.Value is < 0 or > 999)
+        {
+            throw new ArgumentOutOfRangeException(nameof(Value), this.Value, "Countdown value must be between 0 and 999.");
+        }
+    }
+
+    /// <summary>
     /// Gets CSS classes for countdown component.
     /// </summary>
     protected override string CssClass => "fw-countdown";

@@ -20,10 +20,29 @@
     [Parameter] public bool Center { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating items should align to end.
+    /// </summary>
+    [Parameter] public bool End { get; set; }
+
+    /// <summary>
+    /// Validates mutually exclusive alignment options.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (this.Center && this.End)
+        {
+            throw new InvalidOperationException("Carousel alignment cannot be both center and end.");
+        }
+    }
+
+    /// <summary>
     /// Gets CSS classes for carousel container.
     /// </summary>
     protected override string CssClass => new VariantClassBuilder("fw-carousel")
         .AddIf(this.Vertical, "fw-carousel-vertical")
         .AddIf(this.Center, "fw-carousel-center")
+        .AddIf(this.End, "fw-carousel-end")
         .Build();
 }

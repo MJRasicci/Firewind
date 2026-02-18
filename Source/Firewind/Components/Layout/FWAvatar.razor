@@ -32,6 +32,19 @@
     public bool Placeholder { get; set; }
 
     /// <summary>
+    /// Validates mutually exclusive avatar presence states.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (this.Online && this.Offline)
+        {
+            throw new InvalidOperationException("Avatar cannot be both online and offline.");
+        }
+    }
+
+    /// <summary>
     /// Gets CSS classes for configured avatar modifiers.
     /// </summary>
     protected override string CssClass => new VariantClassBuilder("fw-avatar")

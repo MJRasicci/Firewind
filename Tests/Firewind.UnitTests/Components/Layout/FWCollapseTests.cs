@@ -29,6 +29,18 @@ public sealed class FWCollapseTests
         collapse.ComponentAttributes["class"].Should().Be("fw-collapse fw-collapse-plus fw-collapse-close");
     }
 
+    [Fact]
+    public void OnParametersSet_WhenOpenAndClosed_ThrowsInvalidOperationException()
+    {
+        var collapse = new TestCollapse();
+        collapse.Configure(CollapseStyle.Default, open: true, closed: true);
+
+        var action = collapse.ApplyParameters;
+
+        action.Should().Throw<InvalidOperationException>()
+            .WithMessage("*cannot be open and closed at the same time*");
+    }
+
     private sealed class TestCollapse : FWCollapse
     {
         public void Configure(CollapseStyle style, bool open, bool closed)
