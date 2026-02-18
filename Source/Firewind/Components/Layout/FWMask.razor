@@ -20,9 +20,15 @@
     [Parameter] public MaskShape Shape { get; set; }
 
     /// <summary>
+    /// Gets or sets half-mask modifier variant.
+    /// </summary>
+    [Parameter] public MaskHalf Half { get; set; }
+
+    /// <summary>
     /// Gets CSS classes for mask component.
     /// </summary>
     protected override string CssClass => new VariantClassBuilder("fw-mask")
         .AddVariant(this.Shape, static shape => shape.ClassNames())
+        .AddVariant(this.Half, static half => half.ClassNames())
         .Build();
 }
