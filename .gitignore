@@ -354,3 +354,6 @@ Source/Firewind.Showcase/wwwroot/css/showcase.css
 
 # VSCode Settings
 .vscode/
+
+# OpenClaw local guidance
+AGENTS.md
