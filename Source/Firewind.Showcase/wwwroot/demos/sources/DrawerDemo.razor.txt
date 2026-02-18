@@ -1,0 +1,11 @@
+<FWDrawer ToggleId="showcase-drawer" class="w-full" Open>
+    <ChildContent>
+        <div class="p-4">Main content area</div>
+    </ChildContent>
+    <SidebarContent>
+        <ul class="fw-menu bg-base-200 min-h-full w-64 p-4">
+            <li><a>Dashboard</a></li>
+            <li><a>Settings</a></li>
+        </ul>
+    </SidebarContent>
+</FWDrawer>

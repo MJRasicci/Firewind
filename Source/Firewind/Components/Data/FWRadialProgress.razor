@@ -1,0 +1,40 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div role="progressbar" aria-valuenow="@Value" style="--value:@Value;--size:@Size;--thickness:@Thickness;" @attributes="ComponentAttributes">@DisplayText</div>
+
+@code {
+    /// <summary>
+    /// Gets or sets the progress value (0-100).
+    /// </summary>
+    [Parameter] public int Value { get; set; }
+
+    /// <summary>
+    /// Gets or sets rendered text. Defaults to percentage.
+    /// </summary>
+    [Parameter] public string? DisplayText { get; set; }
+
+    /// <summary>
+    /// Gets or sets radial progress size CSS value.
+    /// </summary>
+    [Parameter] public string Size { get; set; } = "5rem";
+
+    /// <summary>
+    /// Gets or sets radial progress thickness CSS value.
+    /// </summary>
+    [Parameter] public string Thickness { get; set; } = "0.5rem";
+
+    /// <summary>
+    /// Ensures display text defaults to percentage.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this.DisplayText ??= $"{this.Value}%";
+    }
+
+    /// <summary>
+    /// Gets CSS classes for radial progress component.
+    /// </summary>
+    protected override string CssClass => "fw-radial-progress";
+}

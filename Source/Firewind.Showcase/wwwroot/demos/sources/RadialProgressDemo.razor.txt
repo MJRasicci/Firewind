@@ -1,0 +1,4 @@
+<div class="flex items-center gap-4 p-4">
+    <FWRadialProgress Value="70" />
+    <FWRadialProgress Value="42" Size="4rem" Thickness="0.35rem" DisplayText="42" class="text-primary" />
+</div>

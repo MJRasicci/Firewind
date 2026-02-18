@@ -1,0 +1,43 @@
+@namespace Firewind.Components
+@inherits FirewindComponentBase
+
+<div @attributes="ComponentAttributes">
+    <input id="@ToggleId" type="checkbox" class="fw-drawer-toggle" checked="@Open" />
+    <div class="fw-drawer-content">@ChildContent</div>
+    <div class="fw-drawer-side">@SidebarContent</div>
+</div>
+
+@code {
+    /// <summary>
+    /// Gets or sets drawer content.
+    /// </summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets sidebar content.
+    /// </summary>
+    [Parameter] public RenderFragment? SidebarContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether drawer is open.
+    /// </summary>
+    [Parameter] public bool Open { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether drawer should appear from end side.
+    /// </summary>
+    [Parameter] public bool End { get; set; }
+
+    /// <summary>
+    /// Gets or sets input toggle id.
+    /// </summary>
+    [Parameter] public string ToggleId { get; set; } = $"fw-drawer-{Guid.NewGuid():N}";
+
+    /// <summary>
+    /// Gets CSS classes for drawer container.
+    /// </summary>
+    protected override string CssClass => new VariantClassBuilder("fw-drawer")
+        .AddIf(this.Open, "fw-drawer-open")
+        .AddIf(this.End, "fw-drawer-end")
+        .Build();
+}
