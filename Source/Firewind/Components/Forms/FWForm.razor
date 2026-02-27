@@ -1,0 +1,146 @@
+@namespace Firewind.Components
+@typeparam TModel where TModel : class
+@inherits FirewindComponentBase
+
+<CascadingValue Value="FormContext" IsFixed="true">
+    <form @attributes="ComponentAttributes" @onsubmit="HandleSubmitAsync">
+        @if (this.ResolvedMode == FWFormMode.Dynamic)
+        {
+            foreach (var field in this.ResolvedFields)
+            {
+                <FWFormField TModel="TModel" Field="field" />
+            }
+        }
+        else
+        {
+            @ChildContent
+        }
+    </form>
+</CascadingValue>
+
+@code
+{
+    private IReadOnlyList<FWFormFieldDefinition> ResolvedFields { get; set; } = [];
+
+    private FWFormMode ResolvedMode => this.Mode switch
+    {
+        FWFormMode.Auto => this.Fields is { Count: > 0 } || this.AutoGenerateFields
+            ? FWFormMode.Dynamic
+            : FWFormMode.Static,
+        _ => this.Mode
+    };
+
+    private FWFormContext<TModel> FormContext => new(
+        this.Model,
+        this.GetFieldValue,
+        this.SetFieldValueAsync);
+
+    /// <summary>
+    /// Gets or sets the data model bound to the form.
+    /// </summary>
+    [Parameter]
+    [EditorRequired]
+    public required TModel Model { get; set; }
+
+    /// <summary>
+    /// Gets or sets the callback invoked when the bound model changes.
+    /// </summary>
+    [Parameter]
+    public EventCallback<TModel> ModelChanged { get; set; }
+
+    /// <summary>
+    /// Gets or sets static child content for static form composition.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets optional explicit field definitions.
+    /// </summary>
+    [Parameter]
+    public IReadOnlyList<FWFormFieldDefinition>? Fields { get; set; }
+
+    /// <summary>
+    /// Gets or sets the form rendering mode.
+    /// </summary>
+    [Parameter]
+    public FWFormMode Mode { get; set; } = FWFormMode.Auto;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether fields should be generated from the model type.
+    /// </summary>
+    [Parameter]
+    public bool AutoGenerateFields { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets the maximum property traversal depth when auto-generating fields.
+    /// </summary>
+    [Parameter]
+    public int AutoGenerateMaxDepth { get; set; } = 2;
+
+    /// <summary>
+    /// Gets or sets a callback that runs when the form is submitted.
+    /// </summary>
+    [Parameter]
+    public EventCallback<TModel> OnSubmit { get; set; }
+
+    /// <summary>
+    /// Gets CSS classes for the root form element.
+    /// </summary>
+    protected override string CssClass => "fw-form";
+
+    /// <summary>
+    /// Rebuilds the resolved field list when parameters change.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        this.ResolvedFields = this.ResolvedMode == FWFormMode.Dynamic
+            ? ResolveFields()
+            : [];
+    }
+
+    private IReadOnlyList<FWFormFieldDefinition> ResolveFields()
+    {
+        if (this.Fields is { Count: > 0 })
+        {
+            return this.Fields
+                .OrderBy(static field => field.Order)
+                .ThenBy(static field => field.Path, StringComparer.Ordinal)
+                .ToArray();
+        }
+
+        if (!this.AutoGenerateFields)
+        {
+            return [];
+        }
+
+        return FWFormSchemaBuilder.Build(typeof(TModel), this.AutoGenerateMaxDepth);
+    }
+
+    private object? GetFieldValue(string path)
+    {
+        return FWObjectPathAccessor.GetValue(this.Model, path);
+    }
+
+    private async Task SetFieldValueAsync(string path, object? value)
+    {
+        FWObjectPathAccessor.SetValue(this.Model, path, value);
+
+        if (this.ModelChanged.HasDelegate)
+        {
+            await this.ModelChanged.InvokeAsync(this.Model);
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task HandleSubmitAsync()
+    {
+        if (this.OnSubmit.HasDelegate)
+        {
+            await this.OnSubmit.InvokeAsync(this.Model);
+        }
+    }
+}

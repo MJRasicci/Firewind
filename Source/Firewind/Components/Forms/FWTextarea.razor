@@ -1,10 +1,21 @@
 @namespace Firewind.Components
 @inherits FirewindComponentBase
 
-<textarea placeholder="@Placeholder" @attributes="ComponentAttributes">@Value</textarea>
+@if (!string.IsNullOrWhiteSpace(Label))
+{
+    <label class="fw-label" for="@Id">@Label</label>
+}
+
+<textarea placeholder="@Placeholder" @onchange="HandleChangedAsync" @attributes="ComponentAttributes">@Value</textarea>
 
 @code
 {
+    /// <summary>
+    /// Gets or sets the textarea label.
+    /// </summary>
+    [Parameter]
+    public string? Label { get; set; }
+
     /// <summary>
     /// Gets or sets the textarea placeholder text.
     /// </summary>
@@ -16,6 +27,12 @@
     /// </summary>
     [Parameter]
     public string? Value { get; set; }
+
+    /// <summary>
+    /// Gets or sets the callback raised when <see cref="Value"/> changes.
+    /// </summary>
+    [Parameter]
+    public EventCallback<string?> ValueChanged { get; set; }
 
     /// <summary>
     /// Gets or sets the visual style variant.
@@ -43,4 +60,14 @@
         .AddVariant(this.Color, static color => color.FormControlClassNames("textarea"))
         .AddVariant(this.Size, static size => size.FormControlClassNames("textarea"))
         .Build();
+
+    private async Task HandleChangedAsync(ChangeEventArgs e)
+    {
+        this.Value = e.Value?.ToString();
+
+        if (this.ValueChanged.HasDelegate)
+        {
+            await this.ValueChanged.InvokeAsync(this.Value);
+        }
+    }
 }

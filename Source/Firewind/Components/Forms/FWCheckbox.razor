@@ -1,10 +1,34 @@
 @namespace Firewind.Components
 @inherits FirewindComponentBase
 
-<input type="checkbox" @attributes="ComponentAttributes" />
+<label class="fw-label cursor-pointer">
+    <input type="checkbox" checked="@Value" @onchange="HandleChangedAsync" @attributes="ComponentAttributes" />
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <span>@Label</span>
+    }
+</label>
 
 @code
 {
+    /// <summary>
+    /// Gets or sets the checkbox label.
+    /// </summary>
+    [Parameter]
+    public string? Label { get; set; }
+
+    /// <summary>
+    /// Gets or sets the checkbox value.
+    /// </summary>
+    [Parameter]
+    public bool Value { get; set; }
+
+    /// <summary>
+    /// Gets or sets the callback raised when <see cref="Value"/> changes.
+    /// </summary>
+    [Parameter]
+    public EventCallback<bool> ValueChanged { get; set; }
+
     /// <summary>
     /// Gets or sets the semantic color variant.
     /// </summary>
@@ -24,4 +48,14 @@
         .AddVariant(this.Color, static color => color.FormControlClassNames("checkbox"))
         .AddVariant(this.Size, static size => size.FormControlClassNames("checkbox"))
         .Build();
+
+    private async Task HandleChangedAsync(ChangeEventArgs e)
+    {
+        this.Value = e.Value is bool isChecked && isChecked;
+
+        if (this.ValueChanged.HasDelegate)
+        {
+            await this.ValueChanged.InvokeAsync(this.Value);
+        }
+    }
 }

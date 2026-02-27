@@ -51,6 +51,29 @@ In a Razor component:
 </FWButton>
 ```
 
+## Forms
+
+Firewind includes `FWForm<TModel>` for model-bound forms.
+
+### Dynamic form generation
+
+```razor
+<FWForm TModel="PersonModel" Model="Person" @bind-Model="Person" />
+```
+
+When `AutoGenerateFields` is enabled (default), the form generates fields from public writable model properties.
+
+### Static form composition with centralized binding
+
+```razor
+<FWForm TModel="PersonModel" Model="Person" @bind-Model="Person" Mode="FWFormMode.Static">
+    <FWFormField TModel="PersonModel" Field="new FWFormFieldDefinition { Path = \"Name\", Label = \"Full Name\" }" />
+    <FWFormField TModel="PersonModel" Field="new FWFormFieldDefinition { Path = \"Age\", Kind = FWFormInputKind.Number }" />
+</FWForm>
+```
+
+In both modes, consumers bind the root model once and fields resolve nested property paths internally.
+
 ## Tailwind / daisyUI Setup Notes
 
 Firewind expects daisyUI-style utility classes with an `fw-` prefix.

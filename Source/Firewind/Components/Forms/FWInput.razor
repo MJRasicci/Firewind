@@ -1,10 +1,21 @@
 @namespace Firewind.Components
 @inherits FirewindComponentBase
 
-<input type="@Type" placeholder="@Placeholder" value="@Value" @attributes="ComponentAttributes" />
+@if (!string.IsNullOrWhiteSpace(Label))
+{
+    <label class="fw-label" for="@Id">@Label</label>
+}
+
+<input type="@Type" placeholder="@Placeholder" value="@Value" @onchange="HandleChangedAsync" @attributes="ComponentAttributes" />
 
 @code
 {
+    /// <summary>
+    /// Gets or sets the input label.
+    /// </summary>
+    [Parameter]
+    public string? Label { get; set; }
+
     /// <summary>
     /// Gets or sets the input type attribute value.
     /// </summary>
@@ -22,6 +33,12 @@
     /// </summary>
     [Parameter]
     public string? Value { get; set; }
+
+    /// <summary>
+    /// Gets or sets the callback raised when <see cref="Value"/> changes.
+    /// </summary>
+    [Parameter]
+    public EventCallback<string?> ValueChanged { get; set; }
 
     /// <summary>
     /// Gets or sets the visual style variant.
@@ -49,4 +66,14 @@
         .AddVariant(this.Color, static color => color.FormControlClassNames("input"))
         .AddVariant(this.Size, static size => size.FormControlClassNames("input"))
         .Build();
+
+    private async Task HandleChangedAsync(ChangeEventArgs e)
+    {
+        this.Value = e.Value?.ToString();
+
+        if (this.ValueChanged.HasDelegate)
+        {
+            await this.ValueChanged.InvokeAsync(this.Value);
+        }
+    }
 }

@@ -1,0 +1,112 @@
+@namespace Firewind.Showcase.Components.Demos.Forms
+@using System.Text.Json
+
+<div class="grid gap-6">
+    <section class="rounded-box border border-base-300 p-4">
+        <h3 class="text-lg font-semibold">FWForm&lt;T&gt; Dynamic (auto-generated)</h3>
+        <p class="text-sm text-base-content/70">Bind the object once and let FWForm infer fields from the model.</p>
+
+        <FWForm TModel="ProfileModel" Model="@this.dynamicModel" ModelChanged="@OnDynamicModelChanged" class="mt-4 grid gap-3" />
+
+        <FWCodeView Language="json" class="mt-4">@this.DynamicSnapshot</FWCodeView>
+    </section>
+
+    <section class="rounded-box border border-base-300 p-4">
+        <h3 class="text-lg font-semibold">FWForm&lt;T&gt; Static field definitions</h3>
+        <p class="text-sm text-base-content/70">Define field metadata explicitly while still binding the root model once.</p>
+
+        <FWForm TModel="ProfileModel" Model="@this.staticModel" ModelChanged="@OnStaticModelChanged" Fields="@this.staticFields" Mode="FWFormMode.Dynamic" class="mt-4 grid gap-3" />
+
+        <FWCodeView Language="json" class="mt-4">@this.StaticSnapshot</FWCodeView>
+    </section>
+</div>
+
+@code {
+    private ProfileModel dynamicModel = new()
+    {
+        Name = "Mike",
+        Age = 34,
+        IsActive = true,
+        StartDate = DateOnly.FromDateTime(DateTime.Today),
+        Status = ProfileStatus.Active,
+        Address = new AddressModel
+        {
+            City = "New York",
+            PostalCode = "10001"
+        }
+    };
+
+    private ProfileModel staticModel = new()
+    {
+        Name = "Sara",
+        Age = 29,
+        IsActive = false,
+        StartDate = DateOnly.FromDateTime(DateTime.Today.AddDays(7)),
+        Status = ProfileStatus.Draft,
+        Address = new AddressModel
+        {
+            City = "Austin",
+            PostalCode = "73301"
+        }
+    };
+
+    private IReadOnlyList<FWFormFieldDefinition> staticFields =>
+    [
+        new() { Path = "Name", Label = "Full Name", Placeholder = "Enter full name", Order = 1 },
+        new() { Path = "Age", Label = "Age", Kind = FWFormInputKind.Number, Order = 2 },
+        new() { Path = "IsActive", Label = "Active", Kind = FWFormInputKind.Checkbox, Order = 3 },
+        new() { Path = "Status", Label = "Status", Kind = FWFormInputKind.Select, Options = [new("Draft", "Draft"), new("Active", "Active"), new("Paused", "Paused")], Order = 4 },
+        new() { Path = "Address.City", Label = "City", Order = 5 },
+        new() { Path = "Address.PostalCode", Label = "Postal Code", Order = 6 },
+    ];
+
+    private string DynamicSnapshot => JsonSerializer.Serialize(this.dynamicModel, SerializerOptions);
+
+    private string StaticSnapshot => JsonSerializer.Serialize(this.staticModel, SerializerOptions);
+
+    private static JsonSerializerOptions SerializerOptions { get; } = new()
+    {
+        WriteIndented = true
+    };
+
+    private Task OnDynamicModelChanged(ProfileModel model)
+    {
+        this.dynamicModel = model;
+        return Task.CompletedTask;
+    }
+
+    private Task OnStaticModelChanged(ProfileModel model)
+    {
+        this.staticModel = model;
+        return Task.CompletedTask;
+    }
+
+    private sealed class ProfileModel
+    {
+        public string Name { get; set; } = string.Empty;
+
+        public int Age { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public DateOnly StartDate { get; set; }
+
+        public ProfileStatus Status { get; set; }
+
+        public AddressModel Address { get; set; } = new();
+    }
+
+    private sealed class AddressModel
+    {
+        public string City { get; set; } = string.Empty;
+
+        public string PostalCode { get; set; } = string.Empty;
+    }
+
+    private enum ProfileStatus
+    {
+        Draft,
+        Active,
+        Paused
+    }
+}

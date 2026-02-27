@@ -1,17 +1,40 @@
 @namespace Firewind.Components
 @inherits FirewindComponentBase
 
-<select @attributes="ComponentAttributes">
+@if (!string.IsNullOrWhiteSpace(Label))
+{
+    <label class="fw-label" for="@Id">@Label</label>
+}
+
+<select value="@Value" @onchange="HandleChangedAsync" @attributes="ComponentAttributes">
     @ChildContent
 </select>
 
 @code
 {
     /// <summary>
+    /// Gets or sets select label content.
+    /// </summary>
+    [Parameter]
+    public string? Label { get; set; }
+
+    /// <summary>
     /// Gets or sets option content rendered inside the select element.
     /// </summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Gets or sets selected option value.
+    /// </summary>
+    [Parameter]
+    public string? Value { get; set; }
+
+    /// <summary>
+    /// Gets or sets the callback raised when <see cref="Value"/> changes.
+    /// </summary>
+    [Parameter]
+    public EventCallback<string?> ValueChanged { get; set; }
 
     /// <summary>
     /// Gets or sets the visual style variant.
@@ -39,4 +62,14 @@
         .AddVariant(this.Color, static color => color.FormControlClassNames("select"))
         .AddVariant(this.Size, static size => size.FormControlClassNames("select"))
         .Build();
+
+    private async Task HandleChangedAsync(ChangeEventArgs e)
+    {
+        this.Value = e.Value?.ToString();
+
+        if (this.ValueChanged.HasDelegate)
+        {
+            await this.ValueChanged.InvokeAsync(this.Value);
+        }
+    }
 }

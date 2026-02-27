@@ -1,0 +1,92 @@
+@namespace Firewind.Components
+@typeparam TModel
+
+@if (FormContext is not null)
+{
+    var value = FormContext.GetValue(Field.Path);
+
+    <fieldset class="fw-fieldset">
+        @if (!string.IsNullOrWhiteSpace(Field.Label))
+        {
+            <label class="fw-label" for="@Field.Path">@Field.Label</label>
+        }
+
+        @switch (Field.Kind)
+        {
+            case FWFormInputKind.Checkbox:
+                <input id="@Field.Path" class="fw-checkbox" type="checkbox" checked="@ToBoolean(value)" @onchange="HandleCheckboxChangedAsync" />
+                break;
+            case FWFormInputKind.TextArea:
+                <textarea id="@Field.Path" class="fw-textarea" placeholder="@Field.Placeholder" @onchange="HandleTextChangedAsync">@ToText(value)</textarea>
+                break;
+            case FWFormInputKind.Select:
+                <select id="@Field.Path" class="fw-select" @onchange="HandleTextChangedAsync">
+                    @foreach (var option in Field.Options)
+                    {
+                        <option selected="@string.Equals(ToText(value), option.Value, StringComparison.Ordinal)" value="@option.Value">@option.Label</option>
+                    }
+                </select>
+                break;
+            case FWFormInputKind.Number:
+                <input id="@Field.Path" class="fw-input" type="number" value="@ToText(value)" placeholder="@Field.Placeholder" @onchange="HandleTextChangedAsync" />
+                break;
+            case FWFormInputKind.Date:
+                <input id="@Field.Path" class="fw-input" type="date" value="@ToDateText(value)" @onchange="HandleTextChangedAsync" />
+                break;
+            default:
+                <input id="@Field.Path" class="fw-input" type="text" value="@ToText(value)" placeholder="@Field.Placeholder" @onchange="HandleTextChangedAsync" />
+                break;
+        }
+    </fieldset>
+}
+
+@code {
+    /// <summary>
+    /// Gets or sets the field definition rendered by this component.
+    /// </summary>
+    [Parameter]
+    [EditorRequired]
+    public required FWFormFieldDefinition Field { get; set; }
+
+    [CascadingParameter]
+    private FWFormContext<TModel>? FormContext { get; set; }
+
+    private Task HandleTextChangedAsync(ChangeEventArgs e)
+    {
+        return this.FormContext is null
+            ? Task.CompletedTask
+            : this.FormContext.SetValueAsync(this.Field.Path, e.Value);
+    }
+
+    private Task HandleCheckboxChangedAsync(ChangeEventArgs e)
+    {
+        return this.FormContext is null
+            ? Task.CompletedTask
+            : this.FormContext.SetValueAsync(this.Field.Path, e.Value);
+    }
+
+    private static string? ToText(object? value)
+    {
+        return value?.ToString();
+    }
+
+    private static string? ToDateText(object? value)
+    {
+        return value switch
+        {
+            DateOnly dateOnly => dateOnly.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
+            DateTime dateTime => dateTime.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
+            _ => value?.ToString()
+        };
+    }
+
+    private static bool ToBoolean(object? value)
+    {
+        return value switch
+        {
+            bool boolValue => boolValue,
+            string text when bool.TryParse(text, out var parsed) => parsed,
+            _ => false
+        };
+    }
+}
