@@ -4,6 +4,12 @@
 <header class="bg-primary text-primary-content p-4 flex-none">
     <div class="container mx-auto flex items-center justify-between gap-4">
         <h1 class="text-2xl">Firewind Showcase</h1>
+        <FWMenu TMenuItem="MenuItem" Orientation="MenuOrientation.Horizontal">
+            @foreach (var item in menuItems)
+            {
+                <FWMenuItem Label="@item.Label" Href="@item.Href" />
+            }
+        </FWMenu>
         <FWThemeController Label="Theme" />
     </div>
 </header>
@@ -21,3 +27,13 @@
         <p class="text-sm">Copyright &copy; 2026 Michael Rasicci</p>
     </div>
 </footer>
+
+@code {
+    private readonly MenuItem[] menuItems = new[]
+    {
+        new MenuItem("Home", "/"),
+        new MenuItem("Gallery", "/gallery"),
+    };
+
+    private record MenuItem(string Label, string Href);
+}

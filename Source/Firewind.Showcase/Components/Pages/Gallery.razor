@@ -1,0 +1,85 @@
+@page "/gallery"
+@inject DemoProvider demoProvider
+
+<PageTitle>Gallery</PageTitle>
+
+<div class="w-full px-4 pb-6 lg:px-8">
+    <div class="grid gap-6 lg:grid-cols-[18rem_1fr]">
+        <aside class="rounded-box border border-base-300 bg-base-100 p-3 lg:sticky lg:top-4 lg:h-fit">
+            <h2 class="px-2 pb-2 text-sm font-semibold uppercase tracking-wide text-base-content/70">Component Demos</h2>
+
+            <FWMenu TMenuItem="string" Size="MenuSize.Small" class="w-full">
+                @foreach (var category in this.demoCategories)
+                {
+                    <FWMenuItem
+                        Label="@category.CategoryTitle"
+                        Collapsible="true"
+                        Open="true">
+                        <ChildContent>
+                            @foreach (var demo in category.Demos)
+                            {
+                                <FWMenuItem
+                                    As="button"
+                                    Label="@demo.Title"
+                                    Behavior="@this.GetMenuItemBehavior(demo)"
+                                    OnClick="@(_ => this.SetActiveDemo(demo.Key))" />
+                            }
+                        </ChildContent>
+                    </FWMenuItem>
+                }
+            </FWMenu>
+        </aside>
+
+        <section class="min-w-0">
+            <FWMultiView ActiveKey="@this.activeDemoKey" AutoSelectFirstItem="false" class="w-full">
+                @foreach (var category in this.demoCategories)
+                {
+                    @foreach (var demo in category.Demos)
+                    {
+                        <FWMultiViewItem Key="@demo.Key">
+                            <GalleryItem Demo="@demo.ComponentType" Title="@demo.Title" Article="@demo.Article" />
+                        </FWMultiViewItem>
+                    }
+                }
+            </FWMultiView>
+        </section>
+    </div>
+</div>
+
+@code {
+    private IReadOnlyList<DemoCategory> demoCategories = [];
+    private string activeDemoKey = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var demos = (await this.demoProvider.FetchDataAsync(CancellationToken.None)).ToArray();
+
+        this.demoCategories = demos
+            .GroupBy(static demo => demo.Category, StringComparer.OrdinalIgnoreCase)
+            .OrderBy(static group => group.Key, StringComparer.OrdinalIgnoreCase)
+            .Select(static group => new DemoCategory(
+                group.Key,
+                [.. group.OrderBy(static demo => demo.Title, StringComparer.OrdinalIgnoreCase)]))
+            .ToArray();
+
+        this.activeDemoKey = this.demoCategories
+            .SelectMany(static category => category.Demos)
+            .Select(static demo => demo.Key)
+            .FirstOrDefault() ?? string.Empty;
+
+        await base.OnInitializedAsync();
+    }
+
+    private MenuItemBehavior GetMenuItemBehavior(ComponentDemo demo) =>
+        string.Equals(this.activeDemoKey, demo.Key, StringComparison.Ordinal)
+            ? MenuItemBehavior.Active
+            : MenuItemBehavior.None;
+
+    private Task SetActiveDemo(string key)
+    {
+        this.activeDemoKey = key;
+        return Task.CompletedTask;
+    }
+
+    private sealed record DemoCategory(string CategoryTitle, IReadOnlyList<ComponentDemo> Demos);
+}

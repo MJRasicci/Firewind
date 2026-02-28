@@ -1,85 +1,83 @@
 @page "/"
 @inject DemoProvider demoProvider
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Firewind Showcase</PageTitle>
 
-<div class="w-full px-4 pb-6 lg:px-8">
-    <div class="grid gap-6 lg:grid-cols-[18rem_1fr]">
-        <aside class="rounded-box border border-base-300 bg-base-100 p-3 lg:sticky lg:top-4 lg:h-fit">
-            <h2 class="px-2 pb-2 text-sm font-semibold uppercase tracking-wide text-base-content/70">Component Demos</h2>
+<!-- Hero -->
+<section class="flex flex-col items-center justify-center py-24 px-4 text-center">
+    <span class="fw-badge fw-badge-warning fw-badge-lg mb-6">Experimental</span>
+    <h1 class="text-5xl font-bold tracking-tight mb-4">Firewind</h1>
+    <p class="text-lg text-base-content/70 max-w-lg mb-10">
+        A <code class="fw-kbd fw-kbd-sm">.NET 10</code> Razor component library for Blazor,
+        built on Tailwind CSS and daisyUI.
+    </p>
+    <FWButton Style="ButtonStyle.Primary" Size="ComponentSize.Large" As="a" href="/gallery">
+        View Component Gallery
+    </FWButton>
+</section>
 
-            <FWMenu TMenuItem="string" Size="MenuSize.Small" class="w-full">
-                @foreach (var category in this.demoCategories)
-                {
-                    <FWMenuItem
-                        Label="@category.CategoryTitle"
-                        Collapsible="true"
-                        Open="true">
-                        <ChildContent>
-                            @foreach (var demo in category.Demos)
-                            {
-                                <FWMenuItem
-                                    As="button"
-                                    Label="@demo.Title"
-                                    Behavior="@this.GetMenuItemBehavior(demo)"
-                                    OnClick="@(_ => this.SetActiveDemo(demo.Key))" />
-                            }
-                        </ChildContent>
-                    </FWMenuItem>
-                }
-            </FWMenu>
-        </aside>
+<FWDivider class="px-4 max-w-4xl mx-auto" />
 
-        <section class="min-w-0">
-            <FWMultiView ActiveKey="@this.activeDemoKey" AutoSelectFirstItem="false" class="w-full">
-                @foreach (var category in this.demoCategories)
-                {
-                    @foreach (var demo in category.Demos)
-                    {
-                        <FWMultiViewItem Key="@demo.Key">
-                            <GalleryItem Demo="@demo.ComponentType" Title="@demo.Title" Article="@demo.Article" />
-                        </FWMultiViewItem>
-                    }
-                }
-            </FWMultiView>
-        </section>
+<!-- Feature cards -->
+<section class="py-16 px-4">
+    <div class="max-w-4xl mx-auto">
+        <h2 class="text-2xl font-semibold text-center mb-10">What's Inside</h2>
+        <div class="grid gap-6 sm:grid-cols-3">
+            <div class="rounded-box border border-base-300 bg-base-100 p-6">
+                <p class="text-lg font-semibold mb-2">Component Library</p>
+                <p class="text-sm text-base-content/70">
+                    Reusable Razor components targeting .NET 10 with full theming,
+                    size variants, and data-driven rendering.
+                </p>
+            </div>
+            <div class="rounded-box border border-base-300 bg-base-100 p-6">
+                <p class="text-lg font-semibold mb-2">Tailwind + daisyUI</p>
+                <p class="text-sm text-base-content/70">
+                    All component styles are driven by Tailwind utility classes
+                    and daisyUI configured with an <code class="fw-kbd fw-kbd-xs">fw-</code> prefix.
+                </p>
+            </div>
+            <div class="rounded-box border border-base-300 bg-base-100 p-6">
+                <p class="text-lg font-semibold mb-2">@demoCount Demos</p>
+                <p class="text-sm text-base-content/70">
+                    Live interactive examples for every component,
+                    organized by category in the Gallery.
+                </p>
+            </div>
+        </div>
     </div>
-</div>
+</section>
+
+<FWDivider class="px-4 max-w-4xl mx-auto" />
+
+<!-- Live button preview -->
+<section class="py-16 px-4">
+    <div class="max-w-4xl mx-auto">
+        <h2 class="text-2xl font-semibold text-center mb-2">Component Preview</h2>
+        <p class="text-center text-sm text-base-content/60 mb-10">A live look at button style variants.</p>
+        <div class="rounded-box border border-base-300 bg-base-200 p-8 flex flex-wrap items-center justify-center gap-3">
+            <FWButton Style="ButtonStyle.Primary">Primary</FWButton>
+            <FWButton Style="ButtonStyle.Secondary">Secondary</FWButton>
+            <FWButton Style="ButtonStyle.Accent">Accent</FWButton>
+            <FWButton Style="ButtonStyle.Neutral">Neutral</FWButton>
+            <FWButton Style="ButtonStyle.Ghost">Ghost</FWButton>
+            <FWButton Style="ButtonStyle.Primary" Outline="true">Outline</FWButton>
+            <FWButton Style="ButtonStyle.Primary" Soft="true">Soft</FWButton>
+            <FWButton Style="ButtonStyle.Primary" Dash="true">Dash</FWButton>
+            <FWButton Style="ButtonStyle.Success">Success</FWButton>
+            <FWButton Style="ButtonStyle.Warning">Warning</FWButton>
+            <FWButton Style="ButtonStyle.Error">Error</FWButton>
+        </div>
+    </div>
+</section>
 
 @code {
-    private IReadOnlyList<DemoCategory> demoCategories = [];
-    private string activeDemoKey = string.Empty;
+    private int demoCount;
 
     protected override async Task OnInitializedAsync()
     {
-        var demos = (await this.demoProvider.FetchDataAsync(CancellationToken.None)).ToArray();
-
-        this.demoCategories = demos
-            .GroupBy(static demo => demo.Category, StringComparer.OrdinalIgnoreCase)
-            .OrderBy(static group => group.Key, StringComparer.OrdinalIgnoreCase)
-            .Select(static group => new DemoCategory(
-                group.Key,
-                [.. group.OrderBy(static demo => demo.Title, StringComparer.OrdinalIgnoreCase)]))
-            .ToArray();
-
-        this.activeDemoKey = this.demoCategories
-            .SelectMany(static category => category.Demos)
-            .Select(static demo => demo.Key)
-            .FirstOrDefault() ?? string.Empty;
-
+        var demos = await this.demoProvider.FetchDataAsync(CancellationToken.None);
+        this.demoCount = demos.Count();
         await base.OnInitializedAsync();
     }
-
-    private MenuItemBehavior GetMenuItemBehavior(ComponentDemo demo) =>
-        string.Equals(this.activeDemoKey, demo.Key, StringComparison.Ordinal)
-            ? MenuItemBehavior.Active
-            : MenuItemBehavior.None;
-
-    private Task SetActiveDemo(string key)
-    {
-        this.activeDemoKey = key;
-        return Task.CompletedTask;
-    }
-
-    private sealed record DemoCategory(string CategoryTitle, IReadOnlyList<ComponentDemo> Demos);
 }
