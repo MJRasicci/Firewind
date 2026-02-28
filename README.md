@@ -1,6 +1,8 @@
 # Firewind
 
-Firewind is a `net10.0` Razor component library for Blazor, built around Tailwind CSS and daisyUI (`fw-` prefixed classes).
+> **This project is experimental and not yet ready for use.** APIs are unstable, things will break, and no packages have been published yet. You can clone the repository and run the showcase application locally to view current progress.
+
+Firewind is a `net10.0` Razor component library for Blazor, built around Tailwind CSS and daisyUI (with `fw-` prefixed classes).
 
 It includes:
 - A reusable component library (`Source/Firewind`)
@@ -14,41 +16,6 @@ It includes:
 
 ```bash
 dotnet workload install wasm-tools
-```
-
-## Add Firewind To Your Project
-
-This repository is currently set up for project-reference usage.
-
-### Option 1: Project reference (recommended right now)
-
-From your app project:
-
-```xml
-<ItemGroup>
-  <ProjectReference Include="..\path\to\Firewind\Source\Firewind\Firewind.csproj" />
-</ItemGroup>
-```
-
-### Option 2: NuGet package
-
-If/when Firewind is published as a package, install it with:
-
-```bash
-dotnet add package Firewind
-```
-
-## Basic Usage
-
-In a Razor component:
-
-```razor
-@using Firewind.Components
-@using Firewind.Variant
-
-<FWButton Style="ButtonStyle.Primary" Size="ComponentSize.Large">
-    Save
-</FWButton>
 ```
 
 ## Tailwind / daisyUI Setup Notes
