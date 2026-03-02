@@ -355,6 +355,9 @@ Source/Firewind.Showcase/wwwroot/css/showcase.css
 # VSCode Settings
 .vscode/
 
-# OpenClaw local guidance
+# LLM local guidance
 AGENTS.md
 daisyui_llms.md
+
+# Third-party tailwind plugins
+Source/Firewind.Showcase/Styles/Plugins/

@@ -4,18 +4,18 @@
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/aspect-ratio";
 
-@plugin "./tailwind-scrollbar.mjs" {
+@plugin "./Plugins/tailwind-scrollbar.mjs" {
   nocompatible: true;
 }
 
-@plugin "./daisyui.mjs" {
+@plugin "./Plugins/daisyui.mjs" {
   themes: all;
   root: ":root";
   prefix: "fw-";
   logs: true;
 }
 
-@plugin "./daisyui-theme.mjs" {
+@plugin "./Plugins/daisyui-theme.mjs" {
   name: "firewind-light";
   default: true;
   prefersdark: false;
@@ -50,7 +50,7 @@
   --noise: 0;
 }
 
-@plugin "./daisyui-theme.mjs" {
+@plugin "./Plugins/daisyui-theme.mjs" {
   name: "firewind-dark";
   default: false;
   prefersdark: true;

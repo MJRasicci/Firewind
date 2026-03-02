@@ -20,6 +20,32 @@
     <ProjectReference Include="..\Firewind\Firewind.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Remove="Styles\**" />
+    <None Update="Styles\**">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="DownloadTailwindPlugins" BeforeTargets="Restore">
+    <DownloadFile
+      SourceUrl="https://raw.githubusercontent.com/MJRasicci/tailwind-scrollbar/refs/heads/feature/standalone-cli-bundle/bundle/tailwind-scrollbar.mjs"
+      DestinationFolder="$(MSBuildProjectDirectory)\Styles\Plugins"
+      DestinationFileName="tailwind-scrollbar.mjs"
+      Condition="!Exists('$(MSBuildProjectDirectory)\Styles\Plugins\tailwind-scrollbar.mjs')" />
+    <DownloadFile
+      SourceUrl="https://github.com/saadeghi/daisyui/releases/latest/download/daisyui.mjs"
+      DestinationFolder="$(MSBuildProjectDirectory)\Styles\Plugins"
+      DestinationFileName="daisyui.mjs"
+      Condition="!Exists('$(MSBuildProjectDirectory)\Styles\Plugins\daisyui.mjs')" />
+    <DownloadFile
+      SourceUrl="https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.mjs"
+      DestinationFolder="$(MSBuildProjectDirectory)\Styles\Plugins"
+      DestinationFileName="daisyui-theme.mjs"
+      Condition="!Exists('$(MSBuildProjectDirectory)\Styles\Plugins\daisyui-theme.mjs')" />
+  </Target>
+
   <Target Name="CopyDemoRazorFiles" BeforeTargets="BeforeBuild">
     <ItemGroup>
       <DemoRazorFiles Include="$(MSBuildProjectDirectory)\Components\Demos\**\*.razor" />
