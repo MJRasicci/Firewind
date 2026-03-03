@@ -28,7 +28,7 @@
     </None>
   </ItemGroup>
 
-  <Target Name="DownloadTailwindPlugins" BeforeTargets="Restore">
+  <Target Name="DownloadTailwindPlugins" BeforeTargets="BuildTailwind;TailwindStartWatchForDotNetWatch">
     <DownloadFile
       SourceUrl="https://raw.githubusercontent.com/MJRasicci/tailwind-scrollbar/refs/heads/feature/standalone-cli-bundle/bundle/tailwind-scrollbar.mjs"
       DestinationFolder="$(MSBuildProjectDirectory)\Styles\Plugins"
